@@ -1,0 +1,17 @@
+Package: pbcusol
+Title: Predict Lead and Copper Solubility
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Benjamin",
+           family = "Trueman",
+           role = c("aut", "cre"),
+           email = "benjamin.trueman@dal.ca",
+           comment = c(ORCID = "0000-0002-1539-3092"))
+Description: pbcusol facilitates equilibrium lead and copper solubility modeling using PHREEQC and tidyphreeqc.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    tidyphreeqc
