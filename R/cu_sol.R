@@ -7,7 +7,7 @@
 #' @param sulfate A vector of sulfate concentrations, in mg SO4/L.
 #' @param phosphate A vector of orthophosphate concentration, in mg P/L.
 #' @param phase Equilibrium phase.
-#' @param db The database used in equilibrium solubility computations. Default is `phreeqc::minteq.v4.dat`
+#' @param db The database used in equilibrium solubility computations. Default is `pbcusol:::cu2sol`
 #'
 #' @return A numeric vector with lead solubilty predictions at the input settings.
 #' @importFrom dplyr %>%
@@ -16,6 +16,7 @@
 #'
 #' @examples
 #' cu_sol(ph = 7.5, dic = 5, phase = "Tenorite")
+#' cu_sol(ph = 7.5, dic = 5, db = phreeqc::minteq.v4.dat, phase = "Tenorite")
 cu_sol <- function(
   ph,
   dic,
@@ -23,7 +24,7 @@ cu_sol <- function(
   sulfate = 0,
   phosphate = 0,
   phase,
-  db = phreeqc::minteq.v4.dat
+  db = cu2sol
 ) {
 
   tidyphreeqc::phr_use_db(db)

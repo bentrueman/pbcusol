@@ -4,15 +4,7 @@
 \alias{cu_sol}
 \title{Calculate equilibrium lead solubility on a grid of input values}
 \usage{
-cu_sol(
-  ph,
-  dic,
-  chloride = 0,
-  sulfate = 0,
-  phosphate = 0,
-  phase,
-  db = phreeqc::minteq.v4.dat
-)
+cu_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = cu2sol)
 }
 \arguments{
 \item{ph}{A vector of pH values.}
@@ -27,7 +19,7 @@ cu_sol(
 
 \item{phase}{Equilibrium phase.}
 
-\item{db}{The database used in equilibrium solubility computations. Default is \code{phreeqc::minteq.v4.dat}}
+\item{db}{The database used in equilibrium solubility computations. Default is \code{pbcusol:::cu2sol}}
 }
 \value{
 A numeric vector with lead solubilty predictions at the input settings.
@@ -37,4 +29,5 @@ Calculate equilibrium lead solubility on a grid of input values
 }
 \examples{
 cu_sol(ph = 7.5, dic = 5, phase = "Tenorite")
+cu_sol(ph = 7.5, dic = 5, db = phreeqc::minteq.v4.dat, phase = "Tenorite")
 }

@@ -20,3 +20,5 @@ Imports:
     rlang,
     tibble,
     tidyphreeqc
+Depends: 
+    R (>= 2.10)
