@@ -9,7 +9,7 @@ pb_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = leadsol)
 \arguments{
 \item{ph}{A vector of pH values.}
 
-\item{dic}{A vector of dissolved inorganic carbon concentrations, in mg C/L.}
+\item{dic}{A vector of dissolved inorganic carbon (DIC) concentrations, in mg C/L.}
 
 \item{chloride}{A vector of chloride concentrations, in  mg/L.}
 
@@ -19,10 +19,10 @@ pb_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = leadsol)
 
 \item{phase}{Equilibrium phase.}
 
-\item{db}{The database used in equilibrium solubility computations. Default is \code{pbcusol:::leadsol}}
+\item{db}{The database to use for equilibrium solubility computations. The default is \code{pbcusol:::leadsol}}
 }
 \value{
-A numeric vector with lead solubilty predictions at the input settings.
+A tibble with the input grid of pH and DIC values and the lead solubilty predictions.
 }
 \description{
 Calculate equilibrium lead solubility on a grid of input values

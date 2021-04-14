@@ -19,10 +19,10 @@ cu_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = cu2sol)
 
 \item{phase}{Equilibrium phase.}
 
-\item{db}{The database used in equilibrium solubility computations. Default is \code{pbcusol:::cu2sol}}
+\item{db}{The database used in equilibrium solubility computations. The default is \code{pbcusol:::cu2sol}}
 }
 \value{
-A numeric vector with lead solubilty predictions at the input settings.
+A tibble with the input grid of pH and DIC values and the copper solubilty predictions.
 }
 \description{
 Calculate equilibrium copper solubility on a grid of input values

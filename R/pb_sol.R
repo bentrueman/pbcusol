@@ -2,14 +2,14 @@
 #' Calculate equilibrium lead solubility on a grid of input values
 #'
 #' @param ph A vector of pH values.
-#' @param dic A vector of dissolved inorganic carbon concentrations, in mg C/L.
+#' @param dic A vector of dissolved inorganic carbon (DIC) concentrations, in mg C/L.
 #' @param chloride A vector of chloride concentrations, in  mg/L.
 #' @param sulfate A vector of sulfate concentrations, in mg SO4/L.
 #' @param phosphate A vector of orthophosphate concentrations, in mg P/L.
 #' @param phase Equilibrium phase.
-#' @param db The database used in equilibrium solubility computations. Default is `pbcusol:::leadsol`
+#' @param db The database to use for equilibrium solubility computations. The default is `pbcusol:::leadsol`
 #'
-#' @return A numeric vector with lead solubilty predictions at the input settings.
+#' @return A tibble with the input grid of pH and DIC values and the lead solubilty predictions.
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #' @export

@@ -26,17 +26,19 @@ remotes::install_github("bentrueman/pbcusol")
 
 ## Example
 
-For this example, you will also need the `tidyverse` family of packages.
+For this example, you will need the `tidyverse` family of packages,
+along with `plyr::round_any()`, and `viridis::scale_fill_viridis()`.
 
 ``` r
 library("pbcusol")
-library("plyr")
 library("tidyverse")
+library("viridis")
 ```
 
 Use `cu_sol()` to calculate the equlibrium solubility of multiple copper
 phases that occur in drinking water systems, over a wide range of pH
-values and dissolved inorganic carbon concentrations.
+values and dissolved inorganic carbon concentrations. N.B., evaluate on
+a smaller grid to speed this up\!
 
 ``` r
 solutions_cu <- list("Cu(OH)2", "Tenorite", "Malachite") %>%
@@ -51,7 +53,8 @@ solutions_cu <- list("Cu(OH)2", "Tenorite", "Malachite") %>%
   )
 ```
 
-Plot the data:
+Plot the data (n.b., plots shown here will differ slightly from those
+the following code generates).
 
 ``` r
 solutions_cu %>% 
@@ -68,9 +71,7 @@ solutions_cu %>%
 
 <img src="man/figures/README-cu-plot-1.png" width="100%" />
 
-Use `pb_sol()` to calculate the equlibrium solubility of multiple lead
-phases that occur in drinking water systems, over a wide range of pH
-values and dissolved inorganic carbon concentrations.
+Use `pb_sol()` to do the same for lead.
 
 ``` r
 solutions_pb <- tibble(
@@ -108,6 +109,9 @@ solutions_pb %>%
 
 <img src="man/figures/README-pb-plot-1.png" width="100%" />
 
+The helper function `calculate_dic()` may be useful for converting
+alkalinity to dissolved inorganic carbon.
+
 # References
 
 Charlton, S.R., and Parkhurst, D.L, 2011, Modules based on the
@@ -123,8 +127,8 @@ reaction, one-dimensional transport, and inverse geochemical
 calculations: U.S. Geological Survey Techniques and Methods, book 6,
 chap. A43, 497 p. <http://pubs.usgs.gov/tm/06/a43>.
 
-Schock, M. R., D. A Lytle, and J. A. Clement. 1995. “Effect of pH, Dic,
-Orthophosphate and Sulfate on Drinking Water Cuprosolvency.” National
+Schock, M. R., D. A Lytle, and J. A. Clement. 1995. “Effect of pH, DIC,
+orthophosphate and sulfate on drinking water cuprosolvency.” National
 Risk Management Research Lab., Cincinnati, OH (United States).
 
 Schock, M. R., I. Wagner, and R. J. Oliphant. 1996. “Corrosion and

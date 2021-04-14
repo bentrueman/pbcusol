@@ -7,9 +7,9 @@
 #' @param sulfate A vector of sulfate concentrations, in mg SO4/L.
 #' @param phosphate A vector of orthophosphate concentrations, in mg P/L.
 #' @param phase Equilibrium phase.
-#' @param db The database used in equilibrium solubility computations. Default is `pbcusol:::cu2sol`
+#' @param db The database used in equilibrium solubility computations. The default is `pbcusol:::cu2sol`
 #'
-#' @return A numeric vector with lead solubilty predictions at the input settings.
+#' @return A tibble with the input grid of pH and DIC values and the copper solubilty predictions.
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #' @export
