@@ -5,7 +5,7 @@
 #' @param dic A vector of dissolved inorganic carbon concentrations, in mg C/L.
 #' @param chloride A vector of chloride concentrations, in  mg/L.
 #' @param sulfate A vector of sulfate concentrations, in mg SO4/L.
-#' @param phosphate A vector of orthophosphate concentration, in mg P/L.
+#' @param phosphate A vector of orthophosphate concentrations, in mg P/L.
 #' @param phase Equilibrium phase.
 #' @param db The database used in equilibrium solubility computations. Default is `pbcusol:::leadsol`
 #'
@@ -29,7 +29,7 @@ pb_sol <- function(
 
   tidyphreeqc::phr_use_db(db)
 
-  rho <- calculate_wdensity(25)
+  #rho <- calculate_wdensity(25)
 
   tidyphreeqc::phr_run(
     tidyphreeqc::phr_solution_list(
@@ -41,9 +41,12 @@ pb_sol <- function(
       P = phosphate / chemr::mass("P"),
       units = "mmol/l"
     ),
-    tidyphreeqc::phr_selected_output(totals = "Pb")
+    tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "Pb"))
   ) %>%
     tibble::as_tibble() %>%
-    dplyr::mutate(pb_ppb = 1e6 * chemr::mass("Pb") * rho * .data$`Pb(mol/kgw)`) %>%
-    dplyr::pull(.data$pb_ppb)
+    dplyr::transmute(
+      .data$pH,
+      dic_ppm = 1e3 * chemr::mass("C") * .data$`C(mol/kgw)`,
+      pb_ppb = 1e6 * chemr::mass("Pb") * .data$`Pb(mol/kgw)`
+    )
 }

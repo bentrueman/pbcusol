@@ -15,7 +15,7 @@ pb_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = leadsol)
 
 \item{sulfate}{A vector of sulfate concentrations, in mg SO4/L.}
 
-\item{phosphate}{A vector of orthophosphate concentration, in mg P/L.}
+\item{phosphate}{A vector of orthophosphate concentrations, in mg P/L.}
 
 \item{phase}{Equilibrium phase.}
 

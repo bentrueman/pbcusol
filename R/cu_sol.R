@@ -1,11 +1,11 @@
 
-#' Calculate equilibrium lead solubility on a grid of input values
+#' Calculate equilibrium copper solubility on a grid of input values
 #'
 #' @param ph A vector of pH values.
 #' @param dic A vector of dissolved inorganic carbon concentrations, in mg C/L.
 #' @param chloride A vector of chloride concentrations, in  mg/L.
 #' @param sulfate A vector of sulfate concentrations, in mg SO4/L.
-#' @param phosphate A vector of orthophosphate concentration, in mg P/L.
+#' @param phosphate A vector of orthophosphate concentrations, in mg P/L.
 #' @param phase Equilibrium phase.
 #' @param db The database used in equilibrium solubility computations. Default is `pbcusol:::cu2sol`
 #'
@@ -29,7 +29,7 @@ cu_sol <- function(
 
   tidyphreeqc::phr_use_db(db)
 
-  rho <- calculate_wdensity(25)
+  #rho <- calculate_wdensity(25)
 
   tidyphreeqc::phr_run(
     tidyphreeqc::phr_solution_list(
@@ -41,9 +41,12 @@ cu_sol <- function(
       P = phosphate / chemr::mass("P"),
       units = "mmol/l"
     ),
-    tidyphreeqc::phr_selected_output(totals = "Cu")
+    tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "Cu"))
   ) %>%
     tibble::as_tibble() %>%
-    dplyr::mutate(cu_ppb = 1e6 * chemr::mass("Cu") * rho * .data$`Cu(mol/kgw)`) %>%
-    dplyr::pull(.data$cu_ppb)
+    dplyr::transmute(
+      .data$pH,
+      dic_ppm = 1e3 * chemr::mass("C") * .data$`C(mol/kgw)`,
+      cu_ppb = 1e6 * chemr::mass("Cu") * .data$`Cu(mol/kgw)`
+    )
 }

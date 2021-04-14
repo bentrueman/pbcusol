@@ -2,7 +2,7 @@
 % Please edit documentation in R/cu_sol.R
 \name{cu_sol}
 \alias{cu_sol}
-\title{Calculate equilibrium lead solubility on a grid of input values}
+\title{Calculate equilibrium copper solubility on a grid of input values}
 \usage{
 cu_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = cu2sol)
 }
@@ -15,7 +15,7 @@ cu_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = cu2sol)
 
 \item{sulfate}{A vector of sulfate concentrations, in mg SO4/L.}
 
-\item{phosphate}{A vector of orthophosphate concentration, in mg P/L.}
+\item{phosphate}{A vector of orthophosphate concentrations, in mg P/L.}
 
 \item{phase}{Equilibrium phase.}
 
@@ -25,7 +25,7 @@ cu_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = cu2sol)
 A numeric vector with lead solubilty predictions at the input settings.
 }
 \description{
-Calculate equilibrium lead solubility on a grid of input values
+Calculate equilibrium copper solubility on a grid of input values
 }
 \examples{
 cu_sol(ph = 7.5, dic = 5, phase = "Tenorite")
