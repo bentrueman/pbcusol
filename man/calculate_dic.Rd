@@ -7,12 +7,12 @@
 calculate_dic(ph, alkalinity)
 }
 \arguments{
-\item{ph}{pH at which to perform the calculation}
+\item{ph}{A vector of pH values.}
 
-\item{alkalinity}{Alkalinity, in mg CaCO3/L}
+\item{alkalinity}{A vector of alkalinities, in mg CaCO3/L}
 }
 \value{
-
+A numeric vector of dissolved inorganic carbon concentrations, in mg C/L.
 }
 \description{
 Calculate dissolved inorganic carbon
