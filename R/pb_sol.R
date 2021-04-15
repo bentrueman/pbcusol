@@ -28,7 +28,6 @@ pb_sol <- function(
 ) {
 
   tidyphreeqc::phr_use_db(db)
-
   #rho <- calculate_wdensity(25)
 
   tidyphreeqc::phr_run(
@@ -41,12 +40,13 @@ pb_sol <- function(
       P = phosphate / chemr::mass("P"),
       units = "mmol/l"
     ),
-    tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "Pb"))
+    tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "P", "Pb"))
   ) %>%
     tibble::as_tibble() %>%
     dplyr::transmute(
       .data$pH,
       dic_ppm = 1e3 * chemr::mass("C") * .data$`C(mol/kgw)`,
+      p_ppm = 1e3 * chemr::mass("P") * .data$`P(mol/kgw)`,
       pb_ppb = 1e6 * chemr::mass("Pb") * .data$`Pb(mol/kgw)`
     )
 }

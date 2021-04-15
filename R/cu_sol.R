@@ -54,12 +54,13 @@ cu_sol <- function(
         P = phosphate / chemr::mass("P"),
         units = "mmol/l"
       ),
-      tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "Cu"))
+      tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "P", "Cu"))
       ) %>%
       tibble::as_tibble() %>%
       dplyr::transmute(
         .data$pH,
         dic_ppm = 1e3 * chemr::mass("C") * .data$`C(mol/kgw)`,
+        p_ppm = 1e3 * chemr::mass("P") * .data$`P(mol/kgw)`,
         cu_ppb = 1e6 * chemr::mass("Cu") * .data$`Cu(mol/kgw)`
       )
   }
