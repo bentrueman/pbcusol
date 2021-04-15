@@ -41,12 +41,13 @@ values and dissolved inorganic carbon concentrations. N.B., evaluate on
 a smaller grid to speed this up\!
 
 ``` r
+dic_increment_cu <- 1.5
 solutions_cu <- list("Cu(OH)2", "Tenorite", "Malachite") %>%
   set_names() %>%
   map_dfr(
     ~cu_sol(
       ph = seq(6, 11, by = .025),
-      dic = seq(1, 150, by = .5),
+      dic = seq(1, 150, by = dic_increment_cu),
       phase = .x
     ),
     .id = "phase"
@@ -60,7 +61,7 @@ the following code generates).
 solutions_cu %>% 
   mutate(
     log10_cu_ppb = log10(cu_ppb),
-    dic_ppm = plyr::round_any(dic_ppm, .5)
+    dic_ppm = plyr::round_any(dic_ppm, dic_increment_cu)
   ) %>% 
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase)) + 
@@ -71,25 +72,23 @@ solutions_cu %>%
 
 <img src="man/figures/README-cu-plot-1.png" width="100%" />
 
-Use `pb_sol()` to do the same for lead.
+Use `pb_sol()` to do the same for lead. The helper function
+`calculate_dic()` may be useful for converting alkalinity to dissolved
+inorganic carbon.
 
 ``` r
-solutions_pb <- tibble(
-  phase = c("Cerussite", "Hydcerussite", "Hxypyromorphite"),
-  phosphate = c(0, 0, 0.33)
-) %>%
-  mutate(
-    data = map2(
-      phase, phosphate,
-      ~ pb_sol(
-          ph = seq(6, 11, by = .025),
-          dic = seq(1, 50, by = .5),
-          phosphate = .y,
-          phase = .x
-      )
-    )
-  ) %>% 
-  unnest(data)
+dic_increment_pb <- .8
+solutions_pb <- list("Cerussite", "Hydcerussite", "Hxypyromorphite") %>%
+  set_names() %>%
+  map_dfr(
+    ~ pb_sol(
+      ph = seq(6, 11, by = .025),
+      dic = seq(1, 80, by = dic_increment_pb),
+      phosphate = .16,
+      phase = .x
+    ),
+    .id = "phase"
+  )
 ```
 
 Plot the data:
@@ -98,7 +97,7 @@ Plot the data:
 solutions_pb %>% 
   mutate(
     log10_pb_ppb = log10(pb_ppb),
-    dic_ppm = plyr::round_any(dic_ppm, .5)
+    dic_ppm = plyr::round_any(dic_ppm, dic_increment_pb)
   ) %>% 
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase)) + 
@@ -109,8 +108,12 @@ solutions_pb %>%
 
 <img src="man/figures/README-pb-plot-1.png" width="100%" />
 
-The helper function `calculate_dic()` may be useful for converting
-alkalinity to dissolved inorganic carbon.
+Combining the information in the previous two plots, we can generate
+prediction surfaces for equilibrium lead and copper solubility that are
+quite close to those presented in literature, specifically Figure 7 in
+Schock et al. (1995) and Figure 4-18 in Schock et al. (1996).
+
+<img src="man/figures/README-combined-1.png" width="100%" />
 
 # References
 

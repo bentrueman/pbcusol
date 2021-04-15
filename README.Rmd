@@ -47,12 +47,13 @@ theme_set(theme_classic() + theme(legend.position = "right", strip.background = 
 Use `cu_sol()` to calculate the equlibrium solubility of multiple copper phases that occur in drinking water systems, over a wide range of pH values and dissolved inorganic carbon concentrations. N.B., evaluate on a smaller grid to speed this up!
 
 ```{r cu-sol}
+dic_increment_cu <- 1.5
 solutions_cu <- list("Cu(OH)2", "Tenorite", "Malachite") %>%
   set_names() %>%
   map_dfr(
     ~cu_sol(
       ph = seq(6, 11, by = .025),
-      dic = seq(1, 150, by = .5),
+      dic = seq(1, 150, by = dic_increment_cu),
       phase = .x
     ),
     .id = "phase"
@@ -65,7 +66,7 @@ Plot the data (n.b., plots shown here will differ slightly from those the follow
 solutions_cu %>% 
   mutate(
     log10_cu_ppb = log10(cu_ppb),
-    dic_ppm = plyr::round_any(dic_ppm, .5)
+    dic_ppm = plyr::round_any(dic_ppm, dic_increment_cu)
   ) %>% 
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase)) + 
@@ -79,7 +80,7 @@ solutions_cu %>%
   mutate(
     phase = fct_recode(phase, "Cu(OH)[2]" = "Cu(OH)2"),
     cu_ppb = log10(cu_ppb),
-    dic_ppm = plyr::round_any(dic_ppm, .5)
+    dic_ppm = plyr::round_any(dic_ppm, dic_increment_cu)
   ) %>% 
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase), labeller = label_parsed) + 
@@ -94,25 +95,21 @@ solutions_cu %>%
   )
 ```
 
-Use `pb_sol()` to do the same for lead.
+Use `pb_sol()` to do the same for lead. The helper function `calculate_dic()` may be useful for converting alkalinity to dissolved inorganic carbon. 
 
 ```{r pb-sol}
-solutions_pb <- tibble(
-  phase = c("Cerussite", "Hydcerussite", "Hxypyromorphite"),
-  phosphate = c(0, 0, 0.33)
-) %>%
-  mutate(
-    data = map2(
-      phase, phosphate,
-      ~ pb_sol(
-          ph = seq(6, 11, by = .025),
-          dic = seq(1, 50, by = .5),
-          phosphate = .y,
-          phase = .x
-      )
-    )
-  ) %>% 
-  unnest(data)
+dic_increment_pb <- .8
+solutions_pb <- list("Cerussite", "Hydcerussite", "Hxypyromorphite") %>%
+  set_names() %>%
+  map_dfr(
+    ~ pb_sol(
+      ph = seq(6, 11, by = .025),
+      dic = seq(1, 80, by = dic_increment_pb),
+      phosphate = .16,
+      phase = .x
+    ),
+    .id = "phase"
+  )
 ```
 
 Plot the data:
@@ -121,7 +118,7 @@ Plot the data:
 solutions_pb %>% 
   mutate(
     log10_pb_ppb = log10(pb_ppb),
-    dic_ppm = plyr::round_any(dic_ppm, .5)
+    dic_ppm = plyr::round_any(dic_ppm, dic_increment_pb)
   ) %>% 
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase)) + 
@@ -135,7 +132,7 @@ solutions_pb %>%
   mutate(
     phase = fct_recode(phase, "Hydroxylpyromorphite" = "Hxypyromorphite", "Hydrocerussite" = "Hydcerussite"),
     pb_ppb = log10(pb_ppb),
-    dic_ppm = plyr::round_any(dic_ppm, .5)
+    dic_ppm = plyr::round_any(dic_ppm, dic_increment_pb)
   ) %>% 
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase)) + 
@@ -150,7 +147,76 @@ solutions_pb %>%
   )
 ```
 
-The helper function `calculate_dic()` may be useful for converting alkalinity to dissolved inorganic carbon.
+Combining the information in the previous two plots, we can generate prediction surfaces for equilibrium lead and copper solubility that are quite close to those presented in literature, specifically Figure 7 in Schock et al. (1995) and Figure 4-18 in Schock et al. (1996).
+
+```{r combined, message=FALSE, fig.height=3, echo=FALSE}
+list(
+  "[Pb]" = rename(solutions_pb, conc_ppb = pb_ppb), 
+  "[Cu]" = rename(solutions_cu, conc_ppb = cu_ppb)
+) %>% 
+  bind_rows(.id = "element") %>% 
+  mutate(
+    dic_ppm = if_else(
+      element == "[Pb]", 
+      plyr::round_any(dic_ppm, dic_increment_pb), 
+      plyr::round_any(dic_ppm, dic_increment_cu)
+    )
+  ) %>% 
+  group_by(element, pH, dic_ppm) %>% 
+  summarize(
+    phase = phase[which.min(conc_ppb)],
+    conc_ppb = min(conc_ppb) %>% log10()
+  ) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = dic_ppm, y = pH)) + 
+  facet_wrap(vars(element), scales = "free_x") + 
+  geom_point(aes(col = conc_ppb), shape = 15, size = 1) +
+  geom_contour(
+    # data = function(x) x %>% 
+    #   filter(element == "[Cu]"),
+    aes(z = conc_ppb), col = "white", linetype = 2, 
+    size = .2, breaks = seq(-4, 3, by = .1)
+  ) + 
+  geom_contour(
+    data = function(x) x %>% 
+      filter(element == "[Cu]"),
+    aes(z = conc_ppb), col = "white", breaks = -3:3
+  ) + 
+  geom_smooth(
+    data = function(x) x %>% 
+      filter(phase == "Hydcerussite") %>% 
+      group_by(element, dic_ppm) %>% 
+      summarize(min = min(pH)),
+    aes(x = dic_ppm, y = min),
+    linetype = 2, size = 1, col = "white", se = FALSE, span = .4
+  ) +
+  geom_smooth(
+    data = function(x) x %>% 
+      filter(phase == "Hxypyromorphite") %>% 
+      group_by(element, dic_ppm) %>% 
+      summarize(max = max(pH)) %>% 
+      filter(dic_ppm > 35),
+    aes(x = dic_ppm, y = max),
+    linetype = 2, size = 1, col = "white", se = FALSE, span = .4
+  ) +
+  viridis::scale_color_viridis(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
+  labs(
+    x = expression("[C]"[inorganic]~"(mg L"^"-1"*")"),
+    y = "pH",
+    col = expression("[element] (mg L"^"-1"*")")
+  ) +
+  geom_label(
+    data = tibble(
+      element = "[Pb]",
+      label = c("PbCO[3]", "Pb[3]*'('*CO[3]*')'[2]*'('*OH*')'[2]", "Pb[5]*'('*PO[4]*')'[3]*OH"),
+      x = c(65, 40, 20),
+      y = c(7.6, 10, 7.6)
+    ),
+    aes(x = x, y = y, label = label),
+    parse = TRUE,
+    label.r = unit(0, "cm"), label.size = unit(0, "cm")
+  )
+```
 
 # References 
 
