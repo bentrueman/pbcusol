@@ -37,8 +37,8 @@ library("viridis")
 
 Use `cu_sol()` to calculate the equlibrium solubility of multiple copper
 phases that occur in drinking water systems, over a wide range of pH
-values and dissolved inorganic carbon concentrations. N.B., evaluate on
-a smaller grid to speed this up\!
+values and dissolved inorganic carbon concentrations. (N.B., evaluate on
+a smaller grid to speed this up\!)
 
 ``` r
 dic_increment_cu <- 1.5
@@ -55,7 +55,10 @@ solutions_cu <- list("Cu(OH)2", "Tenorite", "Malachite") %>%
 ```
 
 Plot the data (n.b., plots shown here will differ slightly from those
-the following code generates).
+the following code generates). Lytle et al. (2018) have noted that
+copper solubility predictions are not reliable in the presence of
+orthophosphate, and they propose an empirical model as an alternative.
+It is implemented in `cu_sol()` via the argument `empirical = TRUE`.
 
 ``` r
 solutions_cu %>% 
@@ -70,9 +73,8 @@ solutions_cu %>%
   viridis::scale_fill_viridis(option = "magma")
 ```
 
-<img src="man/figures/README-cu-plot-1.png" width="100%" />
-
-Use `pb_sol()` to do the same for lead. The helper function
+<img src="man/figures/README-cu-plot-1.png" width="100%" /> Use
+`pb_sol()` to make the same predictions for lead. The helper function
 `calculate_dic()` may be useful for converting alkalinity to dissolved
 inorganic carbon.
 
@@ -117,12 +119,17 @@ Schock et al. (1995) and Figure 4-18 in Schock et al. (1996).
 
 # References
 
-Charlton, S.R., and Parkhurst, D.L, 2011, Modules based on the
+Charlton, S.R., and D. L. Parkhurst, 2011, Modules based on the
 geochemical model PHREEQC for use in scripting and programming
 languages: Computers & Geosciences, v. 37, p. 1653-1663.
 
 Dunnington, D. 2019. tidyphreeqc: Tidy Geochemical Modeling Using
 PHREEQC. <https://github.com/paleolimbot/tidyphreeqc>.
+
+Lytle, D. A., M. R. Schock, J. Leo, and B. Barnes. 2018. A model for
+estimating the impact of orthophosphate on copper in water. Journal
+AWWA. 110: E1-E15.
+<https://doi-org.ezproxy.library.dal.ca/10.1002/awwa.1109>
 
 Parkhurst, D. L., and C. A. J. Appelo. 2013. Description of input and
 examples for PHREEQC version 3–A computer program for speciation, batch-

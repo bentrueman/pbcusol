@@ -4,7 +4,16 @@
 \alias{cu_sol}
 \title{Calculate equilibrium copper solubility on a grid of input values}
 \usage{
-cu_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = cu2sol)
+cu_sol(
+  ph,
+  dic,
+  chloride = 0,
+  sulfate = 0,
+  phosphate = 0,
+  phase,
+  db = cu2sol,
+  empirical = FALSE
+)
 }
 \arguments{
 \item{ph}{A vector of pH values.}
@@ -20,6 +29,9 @@ cu_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = cu2sol)
 \item{phase}{Equilibrium phase.}
 
 \item{db}{The database used in equilibrium solubility computations. The default is \code{pbcusol:::cu2sol}}
+
+\item{empirical}{Logical. Predict equilibrium copper solubility using the empirical model due to Lytle et al.?
+(https://doi.org/10.1002/awwa.1109)}
 }
 \value{
 A tibble with the input grid of pH and DIC values and the copper solubilty predictions.
@@ -30,4 +42,5 @@ Calculate equilibrium copper solubility on a grid of input values
 \examples{
 cu_sol(ph = 7.5, dic = 5, phase = "Tenorite")
 cu_sol(ph = 7.5, dic = 5, db = phreeqc::minteq.v4.dat, phase = "Tenorite")
+cu_sol(7.5, 5, phosphate = 1, empirical = TRUE)
 }

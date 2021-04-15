@@ -19,6 +19,7 @@ Imports:
     phreeqc,
     rlang,
     tibble,
-    tidyphreeqc
+    tidyphreeqc,
+    tidyr
 Depends: 
     R (>= 2.10)
