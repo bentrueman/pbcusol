@@ -225,6 +225,7 @@ list(
     label.r = unit(0, "cm"), label.size = unit(0, "cm")
   )
 ```
+Finally, use `pb_logk()` and `cu_logk()` to generate tables of the relevant reactions and constants in the LEADSOL and CU2SOL databases. N.B., `pbcusol` uses modified versions of `phreeqc::minteq.dat` that include the data from LEADSOL and CU2SOL. `phreeqc::minteq.dat` includes two reactions describing complexation of copper and chloride that are not included in Schock et al. (1995).
 
 # References 
 

@@ -115,7 +115,13 @@ prediction surfaces for equilibrium lead and copper solubility that are
 quite close to those presented in literature, specifically Figure 7 in
 Schock et al. (1995) and Figure 4-18 in Schock et al. (1996).
 
-<img src="man/figures/README-combined-1.png" width="100%" />
+<img src="man/figures/README-combined-1.png" width="100%" /> Finally,
+use `pb_logk()` and `cu_logk()` to generate tables of the relevant
+reactions and constants in the LEADSOL and CU2SOL databases. N.B.,
+`pbcusol` uses modified versions of `phreeqc::minteq.dat` that include
+the data from LEADSOL and CU2SOL. `phreeqc::minteq.dat` includes two
+reactions describing complexation of copper and chloride that are not
+included in Schock et al. (1995).
 
 # References
 

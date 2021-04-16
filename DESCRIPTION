@@ -18,6 +18,7 @@ Imports:
     dplyr,
     phreeqc,
     rlang,
+    stringr,
     tibble,
     tidyphreeqc,
     tidyr

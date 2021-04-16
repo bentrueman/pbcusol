@@ -2,7 +2,9 @@
 
 export(calculate_dic)
 export(calculate_wdensity)
+export(cu_logk)
 export(cu_sol)
+export(pb_logk)
 export(pb_sol)
 importFrom(dplyr,"%>%")
 importFrom(rlang,.data)
