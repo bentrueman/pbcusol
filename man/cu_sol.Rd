@@ -12,7 +12,8 @@ cu_sol(
   phosphate = 0,
   phase,
   db = cu2sol,
-  empirical = FALSE
+  empirical = FALSE,
+  ...
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ cu_sol(
 
 \item{empirical}{Logical. Predict equilibrium copper solubility using the empirical model due to Lytle et al.?
 (https://doi.org/10.1002/awwa.1109)}
+
+\item{...}{Arguments passed on to \code{phr_solution_list()}}
 }
 \value{
 A tibble with the input grid of pH and DIC values and the copper solubilty predictions.

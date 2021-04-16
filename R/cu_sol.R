@@ -10,6 +10,7 @@
 #' @param db The database used in equilibrium solubility computations. The default is `pbcusol:::cu2sol`
 #' @param empirical Logical. Predict equilibrium copper solubility using the empirical model due to Lytle et al.?
 #' (https://doi.org/10.1002/awwa.1109)
+#' @param ... Arguments passed on to `phr_solution_list()`
 #'
 #' @return A tibble with the input grid of pH and DIC values and the copper solubilty predictions.
 #' @importFrom dplyr %>%
@@ -28,7 +29,8 @@ cu_sol <- function(
   phosphate = 0,
   phase,
   db = cu2sol,
-  empirical = FALSE
+  empirical = FALSE,
+  ...
 ) {
 
   if(empirical) {
@@ -52,7 +54,8 @@ cu_sol <- function(
         Cl = chloride / chemr::mass("Cl"),
         S = sulfate / chemr::mass("SO4"),
         P = phosphate / chemr::mass("P"),
-        units = "mmol/l"
+        units = "mmol/l",
+        ...
       ),
       tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "P", "Cu"))
       ) %>%

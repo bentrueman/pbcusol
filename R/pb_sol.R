@@ -8,6 +8,7 @@
 #' @param phosphate A vector of orthophosphate concentrations, in mg P/L.
 #' @param phase Equilibrium phase.
 #' @param db The database to use for equilibrium solubility computations. The default is `pbcusol:::leadsol`
+#' @param ... Arguments passed on to `phr_solution_list()`
 #'
 #' @return A tibble with the input grid of pH and DIC values and the lead solubilty predictions.
 #' @importFrom dplyr %>%
@@ -24,7 +25,8 @@ pb_sol <- function(
   sulfate = 0,
   phosphate = 0,
   phase,
-  db = leadsol
+  db = leadsol,
+  ...
 ) {
 
   tidyphreeqc::phr_use_db(db)
@@ -38,7 +40,8 @@ pb_sol <- function(
       Cl = chloride / chemr::mass("Cl"),
       S = sulfate / chemr::mass("SO4"),
       P = phosphate / chemr::mass("P"),
-      units = "mmol/l"
+      units = "mmol/l",
+      ...
     ),
     tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "P", "Pb"))
   ) %>%

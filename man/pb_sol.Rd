@@ -4,7 +4,16 @@
 \alias{pb_sol}
 \title{Calculate equilibrium lead solubility on a grid of input values}
 \usage{
-pb_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = leadsol)
+pb_sol(
+  ph,
+  dic,
+  chloride = 0,
+  sulfate = 0,
+  phosphate = 0,
+  phase,
+  db = leadsol,
+  ...
+)
 }
 \arguments{
 \item{ph}{A vector of pH values.}
@@ -20,6 +29,8 @@ pb_sol(ph, dic, chloride = 0, sulfate = 0, phosphate = 0, phase, db = leadsol)
 \item{phase}{Equilibrium phase.}
 
 \item{db}{The database to use for equilibrium solubility computations. The default is \code{pbcusol:::leadsol}}
+
+\item{...}{Arguments passed on to \code{phr_solution_list()}}
 }
 \value{
 A tibble with the input grid of pH and DIC values and the lead solubilty predictions.
