@@ -31,8 +31,8 @@ cu_sol(
 
 \item{db}{The database used in equilibrium solubility computations. The default is \code{pbcusol:::cu2sol}}
 
-\item{empirical}{Logical. Predict equilibrium copper solubility using the empirical model due to Lytle et al.?
-(https://doi.org/10.1002/awwa.1109)}
+\item{empirical}{Logical. Predict equilibrium copper solubility using the empirical model due to
+Lytle et al.? \url{https://doi.org/10.1002/awwa.1109}?}
 
 \item{...}{Arguments passed on to \code{phr_solution_list()}}
 }
