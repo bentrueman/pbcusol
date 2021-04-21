@@ -47,7 +47,8 @@ dissolved.
 \description{
 While most lead phases are not soluble enough to have a substantial effect on
 pH (or pe) as they dissolve, simulating extreme conditions may require fixing the pH. This is
-accomplished here using \code{tidyphreeqc::phr_pH_fix_definition()}.
+accomplished here using \code{tidyphreeqc::phr_pH_fix_definition()}, with help from
+\url{https://swilke-geoscience.net/post/phreeqc-mineral-solubility/}.
 }
 \examples{
 pb_sol_fixed(ph = 6, dic = 5, phase = "Cerussite", buffer = "HCl")
