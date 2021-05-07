@@ -11,6 +11,7 @@ pb_sol_fixed(
   phase,
   eq_phase_components = list(),
   new_phase = list(),
+  new_species = list(),
   output_components = list(`-totals` = c("P", "C", "Pb")),
   buffer = "NaOH",
   db = pbcusol:::leadsol,
@@ -29,7 +30,9 @@ pb_sol_fixed(
 \item{eq_phase_components}{Additional equilibrium phase components, passed to
 \code{tidyphreeqc::phr_input_section} as a list.}
 
-\item{new_phase}{Define a phase not included in the database.}
+\item{new_phase}{Define phases not included in the database.}
+
+\item{new_species}{Define solution species not included in the database.}
 
 \item{output_components}{Additional output components, passed to
 \code{tidyphreeqc::phr_input_section} as a list.}
