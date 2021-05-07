@@ -11,6 +11,7 @@ pb_sol_fixed(
   phase,
   eq_phase_components = list(),
   new_phase = list(),
+  phase_out = "Fix_pH",
   new_species = list(),
   output_components = list(`-totals` = c("P", "C", "Pb")),
   buffer = "NaOH",
@@ -31,6 +32,8 @@ pb_sol_fixed(
 \code{tidyphreeqc::phr_input_section} as a list.}
 
 \item{new_phase}{Define phases not included in the database.}
+
+\item{phase_out}{Add an equilibrium phase to the output. Default is the pseudophase "Fix_pH".}
 
 \item{new_species}{Define solution species not included in the database.}
 

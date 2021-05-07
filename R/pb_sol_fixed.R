@@ -13,6 +13,7 @@
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
 #' @param new_phase Define phases not included in the database.
+#' @param phase_out Add an equilibrium phase to the output. Default is the pseudophase "Fix_pH".
 #' @param new_species Define solution species not included in the database.
 #' @param output_components Additional output components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
@@ -26,6 +27,7 @@
 #' orthophosphate (as P), pe, ionic strength (mu), total lead, and moles of the equilibrium phase
 #' dissolved.
 #' @importFrom dplyr %>%
+#' @importFrom rlang :=
 #' @importFrom rlang .data
 #' @export
 #'
@@ -38,6 +40,7 @@ pb_sol_fixed <- function(
   phase,
   eq_phase_components = list(),
   new_phase = list(),
+  phase_out = "Fix_pH",
   new_species = list(),
   output_components = list("-totals" = c("P", "C", "Pb")),
   buffer = "NaOH",
@@ -94,7 +97,7 @@ pb_sol_fixed <- function(
     type = "SELECTED_OUTPUT",
     number = 1,
     components = list(
-      "-equilibrium_phases" = phase,
+      "-equilibrium_phases" = paste(names(eq_phase$components), collapse = " "),
       "-state" = "true",
       "-mu" = "true",
       "-pH" = "true",
@@ -122,7 +125,8 @@ pb_sol_fixed <- function(
       pe = .data$pe,
       mu = .data$mu,
       pb_ppb = 1e6 * .data$`Pb(mol/kgw)` * chemr::mass("Pb"),
-      mol_dissolved = -.data[[paste0("d_", phase)]]
+      !!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
+      !!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
     )
 
 }
