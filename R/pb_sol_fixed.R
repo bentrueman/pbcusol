@@ -12,6 +12,7 @@
 #' @param phase Equilibrium phase.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
+#' @param new_phase Define a phase not included in the database.
 #' @param output_components Additional output components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
 #' @param buffer Substance added or subtracted from the solution to yield the desired pH.
@@ -35,6 +36,7 @@ pb_sol_fixed <- function(
   phosphate = 0,
   phase,
   eq_phase_components = list(),
+  new_phase = list(),
   output_components = list("-totals" = c("P", "C", "Pb")),
   buffer = "NaOH",
   db = pbcusol:::leadsol,
@@ -45,6 +47,11 @@ pb_sol_fixed <- function(
 
   pH_def <- tidyphreeqc::phr_pH_fix_definition()
   pe_def <- tidyphreeqc::phr_pe_fix_definition()
+
+  add_phase <- tidyphreeqc::phr_input_section(
+    type = "PHASES",
+    components = new_phase
+  )
 
   soln <- tidyphreeqc::phr_input_section(
     type =  "SOLUTION",
@@ -88,7 +95,10 @@ pb_sol_fixed <- function(
     ) %>% c(output_components)
   )
 
-  run <- tidyphreeqc::phr_input(pH_def, pe_def, soln, eq_phase, out, tidyphreeqc::phr_end())
+  run <- tidyphreeqc::phr_input(
+    pH_def, pe_def, add_phase,
+    soln, eq_phase, out, tidyphreeqc::phr_end()
+  )
 
   tidyphreeqc::phr_use_db(db)
 
