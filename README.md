@@ -115,19 +115,64 @@ prediction surfaces for equilibrium lead and copper solubility that are
 quite close to those presented in literature, specifically Figure 7 in
 Schock et al. (1995) and Figure 4-18 in Schock et al. (1996).
 
-<img src="man/figures/README-combined-1.png" width="100%" /> Finally,
-use `pb_logk()` and `cu_logk()` to generate tables of the relevant
-reactions and constants in the LEADSOL and CU2SOL databases. N.B.,
-`pbcusol` uses modified versions of `phreeqc::minteq.dat` that include
-the data from LEADSOL and CU2SOL. `phreeqc::minteq.dat` includes two
-reactions describing complexation of copper and chloride that are not
-included in Schock et al. (1995).
+<img src="man/figures/README-combined-1.png" width="100%" /> Use
+`pb_logk()` and `cu_logk()` to generate tables of the relevant reactions
+and constants in the LEADSOL and CU2SOL databases. N.B., `pbcusol` uses
+modified versions of `phreeqc::minteq.dat` that include the data from
+LEADSOL and CU2SOL. `phreeqc::minteq.dat` includes two reactions
+describing complexation of copper and chloride that are not included in
+Schock et al. (1995).
+
+### Surface complexation (experimental)
+
+Metal binding to natural organic matter can be modeled using
+`pb_sol_wham()`, an approximation of the Windermere Humic Acid Model
+(WHAM) (Tipping and Hurley, 1992), as described in Example 19 of
+Parkhurst and Appelo (2013).
+
+``` r
+pb_sol_wham(ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3) %>% 
+  transmute(phase, pH, dic_ppm, solution_pb = pb_ppb, total_pb = mol_Cerussite * 1e6 * 207.21)
+#> # A tibble: 1 x 5
+#>   phase        pH dic_ppm solution_pb total_pb
+#>   <chr>     <dbl>   <dbl>       <dbl>    <dbl>
+#> 1 Cerussite   7.5    50.1        218.    1120.
+```
+
+Metal binding to colloidal ferrihydrite can be modeled using
+`pb_sol_fixed()` (or `pb_sol_wham()`), as described in Example 8 of
+Parkhurst and Appelo (2013).
+
+``` r
+# from Example 8:
+hfo_surface_area <- 600                                   # m^2 / g
+strong_density <- 5e-6 / (hfo_surface_area * .09)         # site density in mol / m^2 
+weak_density <- 2e-4 / (hfo_surface_area * .09)           # site density in mol / m^2 
+hfo_mass <- 1.7e-4                                        # grams of colloidal ferrihydrite (1e-4 g Fe/L)
+hfo_s <- hfo_mass * hfo_surface_area * strong_density     # number of strong binding sites
+hfo_w <- hfo_mass * hfo_surface_area * weak_density       # number of weak binding sites
+
+# define surface:
+fer_surf <- list(
+    Hfo_sOH = c(hfo_s, hfo_surface_area, hfo_mass),
+    Hfo_wOH = hfo_w,
+    "-equilibrate" = 1,
+    "-Donnan"
+    )
+
+pb_sol_fixed(ph = 7.5, dic = 5, phosphate = .3, phase = "Hxypyromorphite", surface_components = fer_surf) %>% 
+  transmute(phase, pH, dic_ppm, p_ppm, solution_pb = pb_ppb, total_pb = mol_Hxypyromorphite * 1e6 * 207.21 * 5)
+#> # A tibble: 1 x 6
+#>   phase              pH dic_ppm p_ppm solution_pb total_pb
+#>   <chr>           <dbl>   <dbl> <dbl>       <dbl>    <dbl>
+#> 1 Hxypyromorphite   7.5    5.00 0.303        19.7     38.0
+```
 
 # References
 
-Charlton, S.R., and D. L. Parkhurst, 2011, Modules based on the
+Charlton, S.R., and D. L. Parkhurst. 2011. Modules based on the
 geochemical model PHREEQC for use in scripting and programming
-languages: Computers & Geosciences, v. 37, p. 1653-1663.
+languages. Computers & Geosciences, v. 37, p. 1653-1663.
 
 Dunnington, D. 2019. tidyphreeqc: Tidy Geochemical Modeling Using
 PHREEQC. <https://github.com/paleolimbot/tidyphreeqc>.
@@ -149,5 +194,9 @@ Risk Management Research Lab., Cincinnati, OH (United States).
 
 Schock, M. R., I. Wagner, and R. J. Oliphant. 1996. “Corrosion and
 solubility of lead in drinking water.” In Internal corrosion of water
-distribution systems, 2nd ed., 131–230. Denver, CO: American Water Works
-Association Research Foundation.
+distribution systems, 2nd ed., p. 131–230. Denver, CO: American Water
+Works Association Research Foundation.
+
+Tipping, E., and M. A. Hurley. 1992. A unifying model of cation binding
+by humic substances. Geochimica et Cosmochimica Acta, v. 56, no. 10,
+p. 3627-3641.

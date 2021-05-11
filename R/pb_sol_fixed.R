@@ -12,6 +12,8 @@
 #' @param phase Equilibrium phase.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
+#' @param surface_components Components of a surface assemblage, passed to
+#' `tidyphreeqc::phr_input_section` as a list.
 #' @param new_phase Define phases not included in the database.
 #' @param phase_out Add an equilibrium phase to the output. Default is the pseudophase "Fix_pH".
 #' @param new_species Define solution species not included in the database.
@@ -42,26 +44,21 @@ pb_sol_fixed <- function(
   new_phase = list(),
   phase_out = "Fix_pH",
   new_species = list(),
+  surface_components = list(),
   output_components = list("-totals" = c("P", "C", "Pb")),
   buffer = "NaOH",
   db = pbcusol:::leadsol,
   ...
 ) {
 
-  solution_components <- list(...)
-
-  pH_def <- tidyphreeqc::phr_pH_fix_definition()
-  pe_def <- tidyphreeqc::phr_pe_fix_definition()
-
-  add_phase <- tidyphreeqc::phr_input_section(
-    type = "PHASES",
-    components = new_phase
-  )
+  # solution:
 
   add_species <- tidyphreeqc::phr_input_section(
     type = "SOLUTION_SPECIES",
     components = new_species
   )
+
+  solution_components <- list(...)
 
   soln <- tidyphreeqc::phr_input_section(
     type =  "SOLUTION",
@@ -80,6 +77,16 @@ pb_sol_fixed <- function(
     ) %>% c(solution_components)
   )
 
+  # phases
+
+  pH_def <- tidyphreeqc::phr_pH_fix_definition()
+  pe_def <- tidyphreeqc::phr_pe_fix_definition()
+
+  add_phase <- tidyphreeqc::phr_input_section(
+    type = "PHASES",
+    components = new_phase
+  )
+
   eq_phase <- tidyphreeqc::phr_input_section(
     type = "EQUILIBRIUM_PHASES",
     number = 1,
@@ -92,6 +99,16 @@ pb_sol_fixed <- function(
       rlang::set_names(c(phase, "Fix_pH", "Fix_pe")) %>%
       c(eq_phase_components)
   )
+
+
+  # add a surface:
+
+  add_surface <- tidyphreeqc::phr_input_section(
+    type = "SURFACE",
+    components = surface_components
+  )
+
+  # output:
 
   out <- tidyphreeqc::phr_input_section(
     type = "SELECTED_OUTPUT",
@@ -106,13 +123,11 @@ pb_sol_fixed <- function(
   )
 
   run <- tidyphreeqc::phr_input(
-    pH_def, pe_def, add_phase, add_species,
+    pH_def, pe_def, add_phase, add_species, add_surface,
     soln, eq_phase, out, tidyphreeqc::phr_end()
   )
 
   tidyphreeqc::phr_use_db(db)
-
-  d_phase <- paste0("d_", phase)
 
   tidyphreeqc::phr_run(run) %>%
     tibble::as_tibble() %>%
