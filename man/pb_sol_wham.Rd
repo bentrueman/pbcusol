@@ -9,7 +9,7 @@ pb_sol_wham(
   dic,
   phosphate = 0,
   phase,
-  mass_ha = 0.001,
+  mass_ha = 0,
   mu_is = 0.003,
   eq_phase_components = list(),
   new_phase = list(),

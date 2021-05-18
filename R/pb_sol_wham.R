@@ -45,7 +45,7 @@ pb_sol_wham <- function(
   dic,
   phosphate = 0,
   phase,
-  mass_ha = 1e-3,
+  mass_ha = 0,
   mu_is = .003,
   eq_phase_components = list(),
   new_phase = list(),
@@ -178,6 +178,8 @@ pb_sol_wham <- function(
         c(surface_components)
     )
 
+    surface <- if(mass_ha == 0) NULL else surface
+
     run <- tidyphreeqc::phr_input(
       surface_master_species, surface_species,
       pH_def, pe_def, add_phase, add_species, surface,
@@ -211,7 +213,7 @@ pb_sol_wham <- function(
   mu_old <- mu_is
   mu_new <- first_iter$mu
 
-  if(mu_new - mu_old < 1e-5) first_iter else{
+  if(mu_new - mu_old < 1e-5 | mass_ha == 0) first_iter else{
 
     counter <- 1
 
