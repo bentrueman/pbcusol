@@ -126,7 +126,7 @@ Schock et al. (1995).
 ### Surface complexation (experimental)
 
 Metal binding to natural organic matter can be modeled using
-`pb_sol_wham()`, an approximation of the Windermere Humic Acid Model
+`pb_sol_wham()`, an approximation of the Windermere Humic Aqueous Model
 (WHAM) (Tipping and Hurley, 1992), as described in Example 19 of
 Parkhurst and Appelo (2013).
 

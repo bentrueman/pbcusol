@@ -229,7 +229,7 @@ Use `pb_logk()` and `cu_logk()` to generate tables of the relevant reactions and
 
 ### Surface complexation (experimental)  
 
-Metal binding to natural organic matter can be modeled using `pb_sol_wham()`, an approximation of the Windermere Humic Acid Model (WHAM) (Tipping and Hurley, 1992), as described in Example 19 of Parkhurst and Appelo (2013).
+Metal binding to natural organic matter can be modeled using `pb_sol_wham()`, an approximation of the Windermere Humic Aqueous Model (WHAM) (Tipping and Hurley, 1992), as described in Example 19 of Parkhurst and Appelo (2013).
 
 ```{r wham}
 pb_sol_wham(ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3) %>% 
