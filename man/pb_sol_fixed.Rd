@@ -10,6 +10,7 @@ pb_sol_fixed(
   phosphate = 0,
   phase,
   element = "Pb",
+  phase_quantity = 10,
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
@@ -31,6 +32,8 @@ pb_sol_fixed(
 \item{phase}{Equilibrium phase.}
 
 \item{element}{An element to return the equilibrium concentration of. Default is Pb.}
+
+\item{phase_quantity}{Moles of equilibrium phase initially present.}
 
 \item{eq_phase_components}{Additional equilibrium phase components, passed to
 \code{tidyphreeqc::phr_input_section} as a list.}

@@ -11,6 +11,7 @@
 #' @param phosphate Orthophosphate, in mg P/L.
 #' @param phase Equilibrium phase.
 #' @param element An element to return the equilibrium concentration of. Default is Pb.
+#' @param phase_quantity Moles of equilibrium phase initially present.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
 #' @param surface_components Components of a surface assemblage, passed to
@@ -42,6 +43,7 @@ pb_sol_fixed <- function(
   phosphate = 0,
   phase,
   element = "Pb",
+  phase_quantity = 10,
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
@@ -98,7 +100,7 @@ pb_sol_fixed <- function(
     number = 1,
     name = "Solid",
     components = list(
-      "phase" = c(0, 10),
+      "phase" = c(0, phase_quantity),
       "Fix_pH" = c(-ph, buffer, 1e6),
       "Fix_pe" = c(-4, "O2", 1e6)
     ) %>%
