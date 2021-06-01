@@ -9,12 +9,13 @@ pb_sol_fixed(
   dic,
   phosphate = 0,
   phase,
+  element = "Pb",
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
   new_species = list(),
   surface_components = list(),
-  output_components = list(`-totals` = c("P", "C", "Pb")),
+  output_components = list(),
   buffer = "NaOH",
   db = pbcusol:::leadsol,
   ...
@@ -28,6 +29,8 @@ pb_sol_fixed(
 \item{phosphate}{Orthophosphate, in mg P/L.}
 
 \item{phase}{Equilibrium phase.}
+
+\item{element}{An element to return the equilibrium concentration of. Default is Pb.}
 
 \item{eq_phase_components}{Additional equilibrium phase components, passed to
 \code{tidyphreeqc::phr_input_section} as a list.}

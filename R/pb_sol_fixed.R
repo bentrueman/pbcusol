@@ -10,6 +10,7 @@
 #' @param dic Dissolved inorganic carbon, in mg C/L.
 #' @param phosphate Orthophosphate, in mg P/L.
 #' @param phase Equilibrium phase.
+#' @param element An element to return the equilibrium concentration of. Default is Pb.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
 #' @param surface_components Components of a surface assemblage, passed to
@@ -40,16 +41,21 @@ pb_sol_fixed <- function(
   dic,
   phosphate = 0,
   phase,
+  element = "Pb",
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
   new_species = list(),
   surface_components = list(),
-  output_components = list("-totals" = c("P", "C", "Pb")),
+  output_components = list(),
   buffer = "NaOH",
   db = pbcusol:::leadsol,
   ...
 ) {
+
+  output_components <- if(length(output_components) == 0) {
+    list("-totals" = c("P", "C", element))
+  } else output_components
 
   # solution:
 
@@ -139,7 +145,7 @@ pb_sol_fixed <- function(
       p_ppm = 1e3 * .data$`P(mol/kgw)` * chemr::mass("P"),
       pe = .data$pe,
       mu = .data$mu,
-      pb_ppb = 1e6 * .data$`Pb(mol/kgw)` * chemr::mass("Pb"),
+      !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element),
       !!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
       !!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
     )
