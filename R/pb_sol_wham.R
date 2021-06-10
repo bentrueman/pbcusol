@@ -27,6 +27,8 @@
 #' @param db The database to use for equilibrium solubility computations. The default is
 #' `pbcusol:::leadsol`
 #' @param max_iter Maximum iterations allowed for convergence of ionic strength.
+#' @param  print Choose whether to print the input file ("input"), the full output ("output"), or the selected output.
+#' Default is the latter.
 #' @param ... Arguments passed on to `tidyphreeqc::phr_input_section()` as solution phase
 #' components. Concentrations should be expressed in mmol/kgw.
 #'
@@ -56,8 +58,12 @@ pb_sol_wham <- function(
   buffer = "NaOH",
   db = pbcusol:::leadsol,
   max_iter = 3,
+  print = NULL,
   ...
 ) {
+
+  if(!is.null(print)) if(!print %in% c("input", "output"))
+    stop("Valid entries for print are NULL, 'input', or 'output'")
 
   # data from WHAM:
   surface_master_species <- phreeqc::Tipping_Hurley.dat[3169:3176]
@@ -138,7 +144,7 @@ pb_sol_wham <- function(
   # SS = 159300 - 220800/(I)^0.09 + 91260/(I)^0.18
   # Example: SS = 46514 m2/g for I = 0.003 mol/l
 
-  pb_sol_wham_iter <- function(mu_guess) {
+  pb_sol_wham_iter <- function(mu_guess, output_type = NULL) {
 
     ssa <- 159300 - 220800/ mu_guess ^ 0.09 + 91260 / mu_guess ^ 0.18
 
@@ -188,32 +194,45 @@ pb_sol_wham <- function(
 
     tidyphreeqc::phr_use_db(db)
 
-    tidyphreeqc::phr_run(run) %>%
-      tibble::as_tibble() %>%
-      dplyr::filter(.data$state == "react") %>%
-      dplyr::transmute(
-        phase,
-        pH = .data$pH,
-        dic_ppm = 1e3 * .data$`C(mol/kgw)` * chemr::mass("C"),
-        p_ppm = 1e3 * .data$`P(mol/kgw)` * chemr::mass("P"),
-        pe = .data$pe,
-        mu = .data$mu,
-        pb_ppb = 1e6 * .data$`Pb(mol/kgw)` * chemr::mass("Pb"),
-        !!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
-        !!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
-      )
+    if(is.null(output_type)) {
+      tidyphreeqc::phr_run(run) %>%
+        tibble::as_tibble() %>%
+        dplyr::filter(.data$state == "react") %>%
+        dplyr::transmute(
+          phase,
+          pH = .data$pH,
+          dic_ppm = 1e3 * .data$`C(mol/kgw)` * chemr::mass("C"),
+          p_ppm = 1e3 * .data$`P(mol/kgw)` * chemr::mass("P"),
+          pe = .data$pe,
+          mu = .data$mu,
+          pb_ppb = 1e6 * .data$`Pb(mol/kgw)` * chemr::mass("Pb"),
+          !!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
+          !!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
+        )
+    } else
+      if(output_type == "input") run else
+        if(output_type == "output") {
+          # full output:
+          tidyphreeqc::phr_input(
+            surface_master_species, surface_species,
+            pH_def, pe_def, add_phase, add_species, surface,
+            soln, eq_phase, tidyphreeqc::phr_end()
+          ) %>%
+            tidyphreeqc::phr_run() %>%
+            tidyphreeqc::phr_print_output()
+        }
   }
 
   # an initial guess for mu is required to estimate the specific surface area of the humic molecules;
   # if it's wrong, repeat the calculation using the updated value for mu until mu converges
   # or max_iter is reached:
 
-  first_iter <- pb_sol_wham_iter(mu_guess = mu_is)
+  next_iter <- pb_sol_wham_iter(mu_guess = mu_is)
 
   mu_old <- mu_is
-  mu_new <- first_iter$mu
+  mu_new <- next_iter$mu
 
-  if(mu_new - mu_old < 1e-5 | mass_ha == 0) first_iter else{
+  print_is_null <- if(mu_new - mu_old < 1e-5 | mass_ha == 0) next_iter else{
 
     counter <- 1
 
@@ -228,5 +247,8 @@ pb_sol_wham <- function(
 
     next_iter
   }
+
+  if(is.null(print)) print_is_null else
+    pb_sol_wham_iter(mu_guess = mu_new, output_type = print)
 
 }

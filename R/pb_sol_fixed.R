@@ -24,6 +24,8 @@
 #' @param buffer Substance added or subtracted from the solution to yield the desired pH.
 #' @param db The database to use for equilibrium solubility computations. The default is
 #' `pbcusol:::leadsol`
+#' @param  print Choose whether to print the input file ("input"), the full output ("output"), or the selected output.
+#' Default is the latter.
 #' @param ... Arguments passed on to `tidyphreeqc::phr_input_section()` as solution phase
 #' components. Concentrations should be expressed in mmol/kgw.
 #'
@@ -52,8 +54,12 @@ pb_sol_fixed <- function(
   output_components = list(),
   buffer = "NaOH",
   db = pbcusol:::leadsol,
+  print = NULL,
   ...
 ) {
+
+  if(!is.null(print)) if(!print %in% c("input", "output"))
+    stop("Valid entries for print are NULL, 'input', or 'output'")
 
   output_components <- if(length(output_components) == 0) {
     list("-totals" = c("P", "C", element))
@@ -137,19 +143,31 @@ pb_sol_fixed <- function(
 
   tidyphreeqc::phr_use_db(db)
 
-  tidyphreeqc::phr_run(run) %>%
-    tibble::as_tibble() %>%
-    dplyr::filter(.data$state == "react") %>%
-    dplyr::transmute(
-      phase,
-      pH = .data$pH,
-      dic_ppm = 1e3 * .data$`C(mol/kgw)` * chemr::mass("C"),
-      p_ppm = 1e3 * .data$`P(mol/kgw)` * chemr::mass("P"),
-      pe = .data$pe,
-      mu = .data$mu,
-      !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element),
-      !!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
-      !!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
-    )
+  if(is.null(print)) {
+    tidyphreeqc::phr_run(run) %>%
+      tibble::as_tibble() %>%
+      dplyr::filter(.data$state == "react") %>%
+      dplyr::transmute(
+        phase,
+        pH = .data$pH,
+        dic_ppm = 1e3 * .data$`C(mol/kgw)` * chemr::mass("C"),
+        p_ppm = 1e3 * .data$`P(mol/kgw)` * chemr::mass("P"),
+        pe = .data$pe,
+        mu = .data$mu,
+        !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element),
+        !!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
+        !!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
+      )
+  } else
+    if(print == "input") run else
+      if(print == "output") {
+        # full output:
+        tidyphreeqc::phr_input(
+          pH_def, pe_def, add_phase, add_species, add_surface,
+          soln, eq_phase, tidyphreeqc::phr_end()
+        ) %>%
+          tidyphreeqc::phr_run() %>%
+          tidyphreeqc::phr_print_output()
+      }
 
 }

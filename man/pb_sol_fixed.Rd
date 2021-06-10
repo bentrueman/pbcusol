@@ -19,6 +19,7 @@ pb_sol_fixed(
   output_components = list(),
   buffer = "NaOH",
   db = pbcusol:::leadsol,
+  print = NULL,
   ...
 )
 }
@@ -54,6 +55,9 @@ pb_sol_fixed(
 
 \item{db}{The database to use for equilibrium solubility computations. The default is
 \code{pbcusol:::leadsol}}
+
+\item{print}{Choose whether to print the input file ("input"), the full output ("output"), or the selected output.
+Default is the latter.}
 
 \item{...}{Arguments passed on to \code{tidyphreeqc::phr_input_section()} as solution phase
 components. Concentrations should be expressed in mmol/kgw.}

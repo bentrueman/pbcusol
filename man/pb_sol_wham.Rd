@@ -20,6 +20,7 @@ pb_sol_wham(
   buffer = "NaOH",
   db = pbcusol:::leadsol,
   max_iter = 3,
+  print = NULL,
   ...
 )
 }
@@ -58,6 +59,9 @@ area of the humic acid molecules.}
 \code{pbcusol:::leadsol}}
 
 \item{max_iter}{Maximum iterations allowed for convergence of ionic strength.}
+
+\item{print}{Choose whether to print the input file ("input"), the full output ("output"), or the selected output.
+Default is the latter.}
 
 \item{...}{Arguments passed on to \code{tidyphreeqc::phr_input_section()} as solution phase
 components. Concentrations should be expressed in mmol/kgw.}
