@@ -64,5 +64,4 @@ eq_sol(element = "Pb", ph = 7.5, dic = 5, db = phreeqc::minteq.v4.dat, phase = "
 eq_sol(element = "Cu", ph = 7.5, dic = 5, phase = "Tenorite")
 eq_sol(element = "Cu", ph = 7.5, dic = 5, db = phreeqc::minteq.v4.dat, phase = "Tenorite")
 eq_sol(element = "Cu", 7.5, 5, phosphate = 1, empirical = TRUE)
-pb_sol(ph = 7.5, dic = 5, phase = "Cerussite")
 }
