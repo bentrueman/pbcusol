@@ -12,7 +12,7 @@
 #' cu_logk()
 cu_logk <- function(kable_format = FALSE) {
 
-  database <- cu2sol %>%
+  database <- pbcu2sol %>%
     tibble::enframe(name = NULL) %>%
     tibble::rowid_to_column()
 

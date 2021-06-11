@@ -1,8 +1,7 @@
 
-#' Calculate equilibrium solubility with fixed pH
+#' Calculate equilibrium solubility with fixed pH and pe
 #'
-#' @description While most lead phases are not soluble enough to have a substantial effect on
-#' pH (or pe) as they dissolve, simulating extreme conditions may require fixing the pH. This is
+#' @description Simulating extreme conditions may require fixing the pH or pe. This is
 #' accomplished here using `tidyphreeqc::phr_pH_fix_definition()`, with help from
 #' \url{https://swilke-geoscience.net/post/phreeqc-mineral-solubility/}.
 #'
@@ -10,7 +9,7 @@
 #' @param dic Dissolved inorganic carbon, in mg C/L.
 #' @param phosphate Orthophosphate, in mg P/L.
 #' @param phase Equilibrium phase.
-#' @param element An element to return the equilibrium concentration of. Default is Pb.
+#' @param element An element to return the equilibrium concentration of.
 #' @param phase_quantity Moles of equilibrium phase initially present.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
@@ -30,7 +29,7 @@
 #' components. Concentrations should be expressed in mmol/kgw.
 #'
 #' @return A tibble with columns representing equilibrium phase, pH, dissolved inorganic carbon,
-#' orthophosphate (as P), pe, ionic strength (mu), total lead, and moles of the equilibrium phase
+#' orthophosphate (as P), pe, ionic strength (mu), total concentration of chosen element in solution, and moles of the equilibrium phase
 #' dissolved.
 #' @importFrom dplyr %>%
 #' @importFrom rlang :=
@@ -38,13 +37,13 @@
 #' @export
 #'
 #' @examples
-#' pb_sol_fixed(ph = 6, dic = 5, phase = "Cerussite", buffer = "HCl")
-pb_sol_fixed <- function(
+#' eq_sol_fixed(element = "Pb", ph = 6, dic = 5, phase = "Cerussite", buffer = "HCl")
+eq_sol_fixed <- function(
   ph,
   dic,
   phosphate = 0,
   phase,
-  element = "Pb",
+  element,
   phase_quantity = 10,
   eq_phase_components = list(),
   new_phase = list(),
@@ -53,7 +52,7 @@ pb_sol_fixed <- function(
   surface_components = list(),
   output_components = list(),
   buffer = "NaOH",
-  db = pbcusol:::leadsol,
+  db = pbcu2sol,
   print = NULL,
   ...
 ) {
@@ -170,4 +169,16 @@ pb_sol_fixed <- function(
           tidyphreeqc::phr_print_output()
       }
 
+}
+
+#' @describeIn eq_sol_fixed Shorthand for `eq_sol_fixed()` with `element = "Pb"`. For backwards compatibility.
+#' @export
+pb_sol_fixed <- function(..., element = "Pb") {
+  eq_sol_fixed(element = element, ...)
+}
+
+#' @describeIn eq_sol_fixed Shorthand for `eq_sol_fixed()` with `element = "Cu"`. For backwards compatibility.
+#' @export
+cu_sol_fixed <- function(..., element = "Cu") {
+  eq_sol_fixed(element = element, ...)
 }

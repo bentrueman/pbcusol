@@ -12,7 +12,7 @@
 #' pb_logk()
 pb_logk <- function(kable_format = FALSE) {
 
-  database <- leadsol %>%
+  database <- pbcu2sol %>%
     tibble::enframe(name = NULL) %>%
     tibble::rowid_to_column()
 

@@ -1,5 +1,6 @@
 #  $Id: minteq.dat 11091 2016-04-21 15:20:05Z dlpark $
 # database modified according to Table 4-14 in Schock, M.R., Wagner, I., Elephant, R.J. Corrosion and solubility of lead in drinking water. In Internal Corrosion of Water Distribution Systems; AWWA Research Foundation: Denver, CO, 1996; pp 29−70.
+#database subsequently modified according to Table 2 in Schock, M. R., Lytle, D. A., & Clement, J. A. (1995). Effect of pH, DIC, orthophosphate and sulfate on drinking water cuprosolvency (No. PB-95-269270/XAB; EPA-600/R-95/085). National Risk Management Research Lab., Cincinnati, OH (United States).
 SOLUTION_MASTER_SPECIES
 #######################################################
 #               essential definitions
@@ -207,7 +208,7 @@ Cu+2 = Cu+2
         delta_h 0       kcal
         -gamma  2.5  0.0
 Cu+2 + e- = Cu+
-        log_k   2.72
+        log_k   2.715
         delta_h 1.65    kcal
         -gamma  2.5  0.0
 F- = F-
@@ -451,7 +452,7 @@ Phthalate-2 = Phthalate-2
         delta_h 0       kcal
 SOLUTION_SPECIES
 H2O = OH- + H+
-        log_k   -13.998
+        log_k   -13.995
         delta_h 13.345  kcal
         -gamma  3.5     0
 H4SiO4 = H3SiO4- + H+
@@ -756,14 +757,22 @@ Mn+2 + CO3-2 + H+ = MnHCO3+
         log_k   11.6
         delta_h 0       kcal
         -gamma  5       0
+Cu+ + Cl- = CuCl
+		log_k	2.7
 Cu+ + 2Cl- = CuCl2-
-        log_k   5.5
+        log_k   5.48
         delta_h -0.42   kcal
         -gamma  4       0
 Cu+ + 3Cl- = CuCl3-2
-        log_k   5.7
+        log_k   4.81
         delta_h 0.26    kcal
         -gamma  5       0
+2Cu+ + 4Cl- = Cu2Cl4-2
+		log_k	10.32
+Cu+ + NH3 = CuNH3+
+		log_k	5.9
+Cu+ + 2NH3 = Cu(NH3)2+
+		log_k	10.8
 Cu+ + 2HS- = Cu(S4)2-3 + 2H+ 
         log_k   3.39
         delta_h 0       kcal
@@ -801,17 +810,35 @@ Cu+2 + Glutamate-2 = CuGlutamate
         log_k   5.3
         delta_h 0       kcal
 Cu+2 + CO3-2 = CuCO3
-        log_k   6.73
+        log_k   6.82
         delta_h 0       kcal
 Cu+2 + 2CO3-2 = Cu(CO3)2-2
-        log_k   9.83
+        log_k   10.60
         delta_h 0       kcal
+Cu+2 + CO3-2 + H2O = Cu(OH)CO3- + H+
+		log_k	-4.25
+Cu+2 + CO3-2 + 2H2O = Cu(OH)2CO3-2 + 2H+
+		log_k	-13.14
+Cu+2 + 2H+ + PO4-3 = CuH2PO4+
+		log_k	21.09
+Cu+2 + H+ + PO4-3 = CuHPO4
+		log_k	16.35
+Cu+2 + NH3 = CuNH3+2
+		log_k	4.04
+Cu+2 + 2NH3 = Cu(NH3)2+2
+		log_k	7.47
+Cu+2 + 3NH3 = Cu(NH3)3+2
+		log_k	10.27
+Cu+2 + 4NH3 = Cu(NH3)4+2
+		log_k	11.75
+Cu+2 + 5NH3 = Cu(NH3)5+2
+		log_k	11.76
 Cu+2 + Cl- = CuCl+
-        log_k   0.43
+        log_k   0.40
         delta_h 8.65    kcal
         -gamma  4       0
 Cu+2 + 2Cl- = CuCl2
-        log_k   0.16
+        log_k   -0.12
         delta_h 10.56   kcal
 Cu+2 + 3Cl- = CuCl3-
         log_k   -2.29
@@ -825,30 +852,32 @@ Cu+2 + F- = CuF+
         log_k   1.26
         delta_h 1.62    kcal
 Cu+2 + H2O = CuOH+ + H+
-        log_k   -8
+        log_k   -7.96
         delta_h 0       kcal
         -gamma  4       0
 Cu+2 + 2H2O = Cu(OH)2 + 2H+
-        log_k   -13.68
+        log_k   -16.24
         delta_h 0       kcal
 Cu+2 + 3H2O = Cu(OH)3- + 3H+
-        log_k   -26.899
+        log_k   -26.90
         delta_h 0       kcal
 Cu+2 + 4H2O = Cu(OH)4-2 + 4H+
-        log_k   -39.6
+        log_k   -39.56
         delta_h 0       kcal
 2Cu+2 + 2H2O = Cu2(OH)2+2 + 2H+
-        log_k   -10.359
+        log_k   -10.58
         delta_h 17.539  kcal
         -analytical 2.497      0.0        -3833.0
+3Cu+2 + 4H2O = Cu3(OH)4+2 + 4H+
+		log_k	-20.76
 Cu+2 + SO4-2 = CuSO4
-        log_k   2.31
+        log_k   2.36
         delta_h 1.22    kcal
 Cu+2 + 3HS- = Cu(HS)3-
         log_k   25.899
         delta_h 0       kcal
 Cu+2 + CO3-2 + H+ = CuHCO3+
-        log_k   13
+        log_k   12.13
         delta_h 0       kcal
 Zn+2 + Cl- = ZnCl+
         log_k   0.43
@@ -1268,7 +1297,7 @@ Sb(OH)3 + H2O = Sb(OH)4- + H+
         log_k   -12.0429
         delta_h 16.695  kcal
 CO3-2 + H+ = HCO3-
-        log_k   10.33
+        log_k   10.329
         delta_h -3.617  kcal
         -gamma  5.4     0
         -analytical -6.498     0.02379    2902.39
@@ -3612,6 +3641,9 @@ Clinoenstatite
         MgSiO3 + H2O + 2H+ = Mg+2 + H4SiO4
         log_k   11.338
         delta_h -20.015 kcal
+CuOH
+	CuOH + H+ = Cu+ + H2O
+	log_k	0.91
 Cristobalite
         SiO2 + 2H2O = H4SiO4
         log_k   -3.587
@@ -3899,7 +3931,7 @@ CuF
         delta_h -12.37  kcal
 Cuprite
         Cu2O + 2H+ = 2Cu+ + H2O
-        log_k   -1.55
+        log_k   -1.62
         delta_h 6.245   kcal
 Chalcocite
         Cu2S + H+ = 2Cu+ + HS-
@@ -3951,11 +3983,11 @@ CuF2:2H2O
         delta_h -3.65   kcal
 Cu(OH)2
         Cu(OH)2 + 2H+ = Cu+2 + 2H2O
-        log_k   8.64
+        log_k   8.89
         delta_h -15.25  kcal
 Atacamite
         Cu2(OH)3Cl + 3H+ = 2Cu+2 + 3H2O + Cl-
-        log_k   7.34
+        log_k   14.68
         delta_h -18.69  kcal
 Cu2(OH)3NO3
         Cu2(OH)3NO3 + 3H+ = 2Cu+2 + 3H2O + NO3-
@@ -3963,19 +3995,19 @@ Cu2(OH)3NO3
         delta_h -17.35  kcal
 Antlerite
         Cu3(OH)4SO4 + 4H+ = 3Cu+2 + 4H2O + SO4-2
-        log_k   8.29
+        log_k   8.81
         delta_h -0      kcal
 Brochantite
         Cu4(OH)6SO4 + 6H+ = 4Cu+2 + 6H2O + SO4-2
-        log_k   15.34
+        log_k   15.38
         delta_h -0      kcal
 Langite
         Cu4(OH)6SO4:H2O + 6H+ = 4Cu+2 + 7H2O + SO4-2
-        log_k   16.79
+        log_k   17.34
         delta_h -39.61  kcal
 Tenorite
         CuO + 2H+ = Cu+2 + H2O
-        log_k   7.62
+        log_k   7.98
         delta_h -15.24  kcal
 CuOCuSO4
         CuO:CuSO4 + 2H+ = 2Cu+2 + H2O + SO4-2
@@ -3983,12 +4015,15 @@ CuOCuSO4
         delta_h -35.575 kcal
 Cu3(PO4)2
         Cu3(PO4)2 = 3Cu+2 + 2PO4-3
-        log_k   -36.85
+        log_k   -36.86
         delta_h -0      kcal
 Cu3(PO4)2:3H2O
         Cu3(PO4)2:3H2O = 3Cu+2 + 2PO4-3 + 3H2O
         log_k   -35.12
         delta_h -0      kcal
+Cu3(PO4)2:2H2O
+        Cu3(PO4)2:2H2O = 3Cu+2 + 2PO4-3 + 2H2O
+        log_k   -38.76
 CuSO4
         CuSO4 = Cu+2 + SO4-2
         log_k   3.01
@@ -4491,7 +4526,7 @@ Wairakite
         delta_h -63.15  kcal
 Malachite
         Cu2(OH)2CO3 + 2H+ = 2Cu+2 + 2H2O + CO3-2
-        log_k   -5.18
+        log_k   -5.48
         delta_h -15.61  kcal
 Azurite
         Cu3(OH)2(CO3)2 + 2H+ = 3Cu+2 + 2H2O + 2CO3-2

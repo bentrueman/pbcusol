@@ -1,16 +1,18 @@
 
-#' Calculate equilibrium lead solubility in the presence of humic acid
+
+#' Calculate equilibrium solubility in the presence of humic acid
 #'
-#' @description Compute equilibrium lead solubility in the presence of humic acid, using the
+#' @description Compute equilibrium solubility in the presence of humic acid, using the
 #' Windermere Humic Acid Model (WHAM), due to Tipping and Hurley (see `phreeqc::Tipping_Hurley.dat`,
 #'  \url{https://doi.org/10.1016/0016-7037(92)90158-F}, and
 #'  \url{https://water.usgs.gov/water-resources/software/PHREEQC/documentation/phreeqc3-html/phreeqc3.htm}).
-#'  This function works like `pb_sol_fixed()`.
+#'  This function works like `eq_sol_fixed()`.
 #'
 #' @param ph pH
 #' @param dic Dissolved inorganic carbon, in mg C/L.
 #' @param phosphate Orthophosphate, in mg P/L.
 #' @param phase Equilibrium phase.
+#' @param element An element to return the equilibrium concentration of.
 #' @param mass_ha Mass of humic acid in grams dissolved organic carbon.
 #' @param mu_is An initial guess for the ionic strength, used to estimate the specific surface
 #' area of the humic acid molecules.
@@ -33,7 +35,7 @@
 #' components. Concentrations should be expressed in mmol/kgw.
 #'
 #' @return A tibble with columns representing equilibrium phase, pH, dissolved inorganic carbon,
-#' orthophosphate (as P), pe, ionic strength (mu), total lead in solution, and moles of the equilibrium phase
+#' orthophosphate (as P), pe, ionic strength (mu), total concentration of element in solution, and moles of the equilibrium phase
 #' dissolved.
 #' @importFrom dplyr %>%
 #' @importFrom rlang :=
@@ -41,22 +43,23 @@
 #' @export
 #'
 #' @examples
-#' pb_sol_wham(ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3)
-pb_sol_wham <- function(
+#' eq_sol_wham(element = "Pb", ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3)
+eq_sol_wham <- function(
   ph,
   dic,
   phosphate = 0,
   phase,
   mass_ha = 0,
+  element,
   mu_is = .003,
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
   new_species = list(),
   surface_components = list(),
-  output_components = list("-totals" = c("P", "C", "Pb")),
+  output_components = list(),
   buffer = "NaOH",
-  db = pbcusol:::leadsol,
+  db = pbcu2sol,
   max_iter = 3,
   print = NULL,
   ...
@@ -64,6 +67,10 @@ pb_sol_wham <- function(
 
   if(!is.null(print)) if(!print %in% c("input", "output"))
     stop("Valid entries for print are NULL, 'input', or 'output'")
+
+  output_components <- if(length(output_components) == 0) {
+    list("-totals" = c("P", "C", element))
+  } else output_components
 
   # data from WHAM:
   surface_master_species <- phreeqc::Tipping_Hurley.dat[3169:3176]
@@ -205,7 +212,7 @@ pb_sol_wham <- function(
           p_ppm = 1e3 * .data$`P(mol/kgw)` * chemr::mass("P"),
           pe = .data$pe,
           mu = .data$mu,
-          pb_ppb = 1e6 * .data$`Pb(mol/kgw)` * chemr::mass("Pb"),
+          !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element),
           !!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
           !!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
         )
@@ -251,4 +258,16 @@ pb_sol_wham <- function(
   if(is.null(print)) print_is_null else
     pb_sol_wham_iter(mu_guess = mu_new, output_type = print)
 
+}
+
+#' @describeIn eq_sol_wham Shorthand for `eq_sol_wham()` with `element = "Pb"`. For backwards compatibility.
+#' @export
+pb_sol_wham <- function(element = "Pb", ...) {
+  eq_sol_wham(element = element, ...)
+}
+
+#' @describeIn eq_sol_wham Shorthand for `eq_sol_wham()` with `element = "Cu"`. For backwards compatibility.
+#' @export
+cu_sol_wham <- function(element = "Cu", ...) {
+  eq_sol_wham(element = element, ...)
 }

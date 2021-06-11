@@ -1,12 +1,8 @@
-## code to prepare `DATASET` dataset goes here
+## code to prepare `pbcu2sol` dataset goes here
 
 library("tidyverse")
 
-write(pbcusol:::leadsol, "data-raw/leadsol.txt")
-write(pbcusol:::cu2sol, "data-raw/cu2sol.txt")
+pbcu2sol <- read_lines("data-raw/pbcu2sol.txt")
 
-leadsol <- pbcusol:::leadsol
-cu2sol <- pbcusol:::cu2sol
-
-usethis::use_data(leadsol, cu2sol, internal = TRUE, overwrite = TRUE)
+usethis::use_data(pbcu2sol, internal = TRUE, overwrite = TRUE)
 
