@@ -35,10 +35,10 @@ library("tidyverse")
 library("viridis")
 ```
 
-Use `eq_sol(element = "Cu")` to calculate the equlibrium solubility of
-multiple copper phases that occur in drinking water systems, over a wide
-range of pH values and dissolved inorganic carbon concentrations. (N.B.,
-evaluate on a smaller grid to speed this up\!)
+Use `eq_sol()` to calculate the equlibrium solubility of multiple copper
+phases that occur in drinking water systems, over a wide range of pH
+values and dissolved inorganic carbon concentrations. (N.B., evaluate on
+a smaller grid to speed this up\!)
 
 ``` r
 dic_increment_cu <- 1.5
@@ -59,8 +59,7 @@ Plot the data (n.b., plots shown here will differ slightly from those
 the following code generates). Lytle et al. (2018) have noted that
 copper solubility predictions are not reliable in the presence of
 orthophosphate, and they propose an empirical model as an alternative.
-It is implemented in `eq_sol(element = "Cu")` via the argument
-`empirical = TRUE`.
+It is implemented in `eq_sol()` via the argument `empirical = TRUE`.
 
 ``` r
 solutions_cu %>% 
@@ -76,9 +75,9 @@ solutions_cu %>%
 ```
 
 <img src="man/figures/README-cu-plot-1.png" width="100%" /> Use
-`eq_sol(element = "Pb")` to make the same predictions for lead. The
-helper function `calculate_dic()` may be useful for converting
-alkalinity to dissolved inorganic carbon.
+`eq_sol()` to make the same predictions for lead. The helper function
+`calculate_dic()` may be useful for converting alkalinity to dissolved
+inorganic carbon.
 
 ``` r
 dic_increment_pb <- .8
@@ -118,32 +117,44 @@ prediction surfaces for equilibrium lead and copper solubility that are
 quite close to those presented in literature, specifically Figure 7 in
 Schock et al. (1995) and Figure 4-18 in Schock et al. (1996).
 
-<img src="man/figures/README-combined-1.png" width="100%" /> Use
-`pb_logk()` and `cu_logk()` to generate tables of the relevant reactions
-and constants in the LEADSOL and CU2SOL databases. N.B., `pbcusol` uses
-modified versions of `phreeqc::minteq.dat` that include the data from
-LEADSOL and CU2SOL. `phreeqc::minteq.dat` includes two reactions
-describing complexation of copper and chloride that are not included in
-Schock et al. (1995).
+<img src="man/figures/README-combined-1.png" width="100%" />
+
+Use `pb_logk()` and `cu_logk()` to generate tables of the relevant
+reactions and constants in the LEADSOL and CU2SOL databases. N.B.,
+`pbcusol` uses a modified version of `phreeqc::minteq.dat` that include
+the data from LEADSOL and CU2SOL. N.B., `phreeqc::minteq.dat` includes
+two reactions describing complexation of copper and chloride that are
+not included in Schock et al. (1995).
 
 ### Surface complexation (experimental)
 
 Metal binding to natural organic matter can be modeled using
-`pb_sol_wham()`, an approximation of the Windermere Humic Aqueous Model
+`eq_sol_wham()`, an approximation of the Windermere Humic Aqueous Model
 (WHAM) (Tipping and Hurley, 1992), as described in Example 19 of
 Parkhurst and Appelo (2013).
 
 ``` r
-eq_sol_wham(element = "Pb", ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3) %>% 
-  transmute(phase, pH, dic_ppm, solution_pb = pb_ppb, total_pb = mol_Cerussite * 1e6 * 207.21)
+eq_sol_wham(
+  element = "Pb", 
+  ph = 7.5, 
+  dic = 50, 
+  phase = "Cerussite", 
+  Na = 4, 
+  mass_ha = 3.5e-3
+) %>% 
+  transmute(
+    phase, pH, dic_ppm, 
+    solution_pb = pb_ppb, 
+    total_pb = mol_Cerussite * 1e6 * 207.21
+  )
 #> # A tibble: 1 x 5
 #>   phase        pH dic_ppm solution_pb total_pb
 #>   <chr>     <dbl>   <dbl>       <dbl>    <dbl>
-#> 1 Cerussite   7.5    50.1        218.    1120.
+#> 1 Cerussite   7.5    50.1        217.    1162.
 ```
 
 Metal binding to colloidal ferrihydrite can be modeled using
-`pb_sol_fixed()` (or `pb_sol_wham()`), as described in Example 8 of
+`eq_sol_fixed()` (or `eq_sol_wham()`), as described in Example 8 of
 Parkhurst and Appelo (2013).
 
 ``` r
@@ -163,8 +174,19 @@ fer_surf <- list(
     "-Donnan"
     )
 
-eq_sol_fixed( element = "Pb", ph = 7.5, dic = 5, phosphate = .3, phase = "Hxypyromorphite", surface_components = fer_surf) %>% 
-  transmute(phase, pH, dic_ppm, p_ppm, solution_pb = pb_ppb, total_pb = mol_Hxypyromorphite * 1e6 * 207.21 * 5)
+eq_sol_fixed(
+  element = "Pb", 
+  ph = 7.5, 
+  dic = 5, 
+  phosphate = .3, 
+  phase = "Hxypyromorphite", 
+  surface_components = fer_surf
+) %>% 
+  transmute(
+    phase, pH, dic_ppm, p_ppm, 
+    solution_pb = pb_ppb, 
+    total_pb = mol_Hxypyromorphite * 1e6 * 207.21 * 5
+  )
 #> # A tibble: 1 x 6
 #>   phase              pH dic_ppm p_ppm solution_pb total_pb
 #>   <chr>           <dbl>   <dbl> <dbl>       <dbl>    <dbl>
