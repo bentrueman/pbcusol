@@ -24,7 +24,7 @@ pb_sol_jurgens(
 )
 }
 \arguments{
-\item{Pb}{Concentrations of Pb initially present in solution (mg/L).}
+\item{Pb}{Concentrations of Pb initially present in solution (micrograms/L).}
 
 \item{ph}{pH}
 

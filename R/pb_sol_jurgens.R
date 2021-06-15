@@ -5,7 +5,7 @@
 #' @description Experimental implementation of the approach to lead solubility calculation outlined in Jurgens et al.
 #' \url{https://doi.org/10.1021/acs.est.8b04475}.
 #'
-#' @param Pb Concentrations of Pb initially present in solution (mg/L).
+#' @param Pb Concentrations of Pb initially present in solution (micrograms/L).
 #' @param ph pH
 #' @param dic Dissolved inorganic carbon, in mg C/L.
 #' @param phosphate Orthophosphate, in mg P/L.
@@ -61,7 +61,7 @@ pb_sol_jurgens <- function(
     stop("Valid entries for print are NULL, 'input', or 'output'")
 
   output_components <- if(length(output_components) == 0) {
-    list("-totals" = c("P", "C", element))
+    list("-totals" = c("P", "C", "Ca", "Cl", "F", element))
   } else output_components
 
   # solution:
@@ -78,7 +78,7 @@ pb_sol_jurgens <- function(
     number = 1,
     name = "water",
     components = list(
-      "Pb" = Pb / chemr::mass("Pb"),
+      "Pb" = 1e-3 * Pb / chemr::mass("Pb"),
       "pH" = ph,
       "C(4)" = dic / chemr::mass("C"),
       "P" = phosphate / chemr::mass("P"),
@@ -154,8 +154,9 @@ pb_sol_jurgens <- function(
     type = "SELECTED_OUTPUT",
     number = 1,
     components = list(
-      "-equilibrium_phases" = phases,
+      "-equilibrium_phases" = phases[-1],
       "-saturation_indices" = phases,
+      "-solid_solutions" = phases[c(2, 3, 5, 7, 8, 10)],
       "-state" = "true",
       "-mu" = "true",
       "-pH" = "true",
@@ -174,16 +175,20 @@ pb_sol_jurgens <- function(
     tidyphreeqc::phr_run(run) %>%
       tibble::as_tibble() %>%
       dplyr::filter(.data$state == "react") %>%
-      dplyr::transmute(
-        pH = .data$pH,
+      dplyr::select(
+        .data$pH, .data$pe, .data$mu,
+        paste0("s_", phases[c(2, 3, 5, 7, 8, 10)]), paste0("d_", phases[-1]),
+        .data$`C(mol/kgw)`, .data$`P(mol/kgw)`, .data$`Ca(mol/kgw)`,
+        .data[[paste0(element, "(mol/kgw)")]]
+      ) %>%
+      dplyr::mutate(
         dic_ppm = 1e3 * .data$`C(mol/kgw)` * chemr::mass("C"),
         p_ppm = 1e3 * .data$`P(mol/kgw)` * chemr::mass("P"),
-        pe = .data$pe,
-        mu = .data$mu,
-        !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element),
-        #!!paste0("mol_", phase) := -.data[[paste0("d_", phase)]],
-        #!!paste0("mol_", phase_out) := -.data[[paste0("d_", phase_out)]]
-      )
+        ca_ppm =  1e3 * .data$`Ca(mol/kgw)` * chemr::mass("Ca"),
+        !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element)
+      ) %>%
+      dplyr::select_if(~ !dplyr::near(.x, 0, 1e-20)) %>%
+      dplyr::select_at(dplyr::vars(!tidyselect::matches("mol/kgw")))
   } else
     if(print == "input") run else
       if(print == "output") {
