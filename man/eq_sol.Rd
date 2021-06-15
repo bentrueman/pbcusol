@@ -41,7 +41,7 @@ cu_sol(..., element = "Cu")
 \item{db}{The database to use for equilibrium solubility computations. The default is \code{pbcusol:::pbcu2sol}}
 
 \item{empirical}{Logical. Predict equilibrium copper solubility using the empirical model due to
-Lytle et al.? \url{https://doi.org/10.1002/awwa.1109}?}
+Lytle et al. \url{https://doi.org/10.1002/awwa.1109}?}
 
 \item{...}{Arguments passed on to \code{phr_solution_list()}}
 }
