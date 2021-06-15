@@ -11,7 +11,7 @@
 #' @param phase Equilibrium phase.
 #' @param db The database to use for equilibrium solubility computations. The default is `pbcusol:::pbcu2sol`
 #' @param empirical Logical. Predict equilibrium copper solubility using the empirical model due to
-#' Lytle et al.? \url{https://doi.org/10.1002/awwa.1109}?
+#' Lytle et al. \url{https://doi.org/10.1002/awwa.1109}?
 #' @param ... Arguments passed on to `phr_solution_list()`
 #'
 #' @return A tibble with the input grid of pH and DIC values and the solubilty predictions.

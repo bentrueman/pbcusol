@@ -35,17 +35,18 @@ library("tidyverse")
 library("viridis")
 ```
 
-Use `cu_sol()` to calculate the equlibrium solubility of multiple copper
-phases that occur in drinking water systems, over a wide range of pH
-values and dissolved inorganic carbon concentrations. (N.B., evaluate on
-a smaller grid to speed this up\!)
+Use `eq_sol(element = "Cu")` to calculate the equlibrium solubility of
+multiple copper phases that occur in drinking water systems, over a wide
+range of pH values and dissolved inorganic carbon concentrations. (N.B.,
+evaluate on a smaller grid to speed this up\!)
 
 ``` r
 dic_increment_cu <- 1.5
 solutions_cu <- list("Cu(OH)2", "Tenorite", "Malachite") %>%
   set_names() %>%
   map_dfr(
-    ~cu_sol(
+    ~eq_sol(
+      element = "Cu",
       ph = seq(6, 11, by = .025),
       dic = seq(1, 150, by = dic_increment_cu),
       phase = .x
@@ -58,7 +59,8 @@ Plot the data (n.b., plots shown here will differ slightly from those
 the following code generates). Lytle et al. (2018) have noted that
 copper solubility predictions are not reliable in the presence of
 orthophosphate, and they propose an empirical model as an alternative.
-It is implemented in `cu_sol()` via the argument `empirical = TRUE`.
+It is implemented in `eq_sol(element = "Cu")` via the argument
+`empirical = TRUE`.
 
 ``` r
 solutions_cu %>% 
@@ -74,16 +76,17 @@ solutions_cu %>%
 ```
 
 <img src="man/figures/README-cu-plot-1.png" width="100%" /> Use
-`pb_sol()` to make the same predictions for lead. The helper function
-`calculate_dic()` may be useful for converting alkalinity to dissolved
-inorganic carbon.
+`eq_sol(element = "Pb")` to make the same predictions for lead. The
+helper function `calculate_dic()` may be useful for converting
+alkalinity to dissolved inorganic carbon.
 
 ``` r
 dic_increment_pb <- .8
 solutions_pb <- list("Cerussite", "Hydcerussite", "Hxypyromorphite") %>%
   set_names() %>%
   map_dfr(
-    ~ pb_sol(
+    ~ eq_sol(
+      element = "Pb",
       ph = seq(6, 11, by = .025),
       dic = seq(1, 80, by = dic_increment_pb),
       phosphate = .16,
@@ -131,7 +134,7 @@ Metal binding to natural organic matter can be modeled using
 Parkhurst and Appelo (2013).
 
 ``` r
-pb_sol_wham(ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3) %>% 
+eq_sol_wham(element = "Pb", ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3) %>% 
   transmute(phase, pH, dic_ppm, solution_pb = pb_ppb, total_pb = mol_Cerussite * 1e6 * 207.21)
 #> # A tibble: 1 x 5
 #>   phase        pH dic_ppm solution_pb total_pb
@@ -160,7 +163,7 @@ fer_surf <- list(
     "-Donnan"
     )
 
-pb_sol_fixed(ph = 7.5, dic = 5, phosphate = .3, phase = "Hxypyromorphite", surface_components = fer_surf) %>% 
+eq_sol_fixed( element = "Pb", ph = 7.5, dic = 5, phosphate = .3, phase = "Hxypyromorphite", surface_components = fer_surf) %>% 
   transmute(phase, pH, dic_ppm, p_ppm, solution_pb = pb_ppb, total_pb = mol_Hxypyromorphite * 1e6 * 207.21 * 5)
 #> # A tibble: 1 x 6
 #>   phase              pH dic_ppm p_ppm solution_pb total_pb

@@ -16,6 +16,7 @@
 #' @param mass_ha Mass of humic acid in grams dissolved organic carbon.
 #' @param mu_is An initial guess for the ionic strength, used to estimate the specific surface
 #' area of the humic acid molecules.
+#' @param phase_quantity Moles of equilibrium phase initially present.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
 #' @param surface_components Additional surface components, passed to
@@ -52,6 +53,7 @@ eq_sol_wham <- function(
   mass_ha = 0,
   element,
   mu_is = .003,
+  phase_quantity = 1,
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
@@ -123,7 +125,7 @@ eq_sol_wham <- function(
     number = 1,
     name = "Solid",
     components = list(
-      "phase" = c(0, 10),
+      "phase" = c(0, phase_quantity),
       "Fix_pH" = c(-ph, buffer, 1e6),
       "Fix_pe" = c(-4, "O2", 1e6)
     ) %>%
@@ -220,12 +222,7 @@ eq_sol_wham <- function(
       if(output_type == "input") run else
         if(output_type == "output") {
           # full output:
-          tidyphreeqc::phr_input(
-            surface_master_species, surface_species,
-            pH_def, pe_def, add_phase, add_species, surface,
-            soln, eq_phase, tidyphreeqc::phr_end()
-          ) %>%
-            tidyphreeqc::phr_run() %>%
+          tidyphreeqc::phr_run(run) %>%
             tidyphreeqc::phr_print_output()
         }
   }
