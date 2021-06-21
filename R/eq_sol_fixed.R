@@ -79,7 +79,7 @@ eq_sol_fixed <- function(
     name = "water",
     components = list(
       "pH" = ph,
-      "C(4)" = dic / chemr::mass("C"),
+      "C(4)" = if(is.numeric(dic)) dic / chemr::mass("C") else dic,
       "P" = phosphate / chemr::mass("P"),
       "pe" = 4,
       "temp" = 25,

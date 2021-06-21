@@ -55,7 +55,7 @@ eq_sol <- function(
     do.call(tidyphreeqc::phr_solution_list, rlang::list2(
       pH = ph,
       !!element := c("1", phase, "0") %>% paste(collapse = " "),
-      C = dic / chemr::mass("C"),
+      "C(4)" = if(is.numeric(dic)) dic / chemr::mass("C") else dic,
       Cl = chloride / chemr::mass("Cl"),
       S = sulfate / chemr::mass("SO4"),
       P = phosphate / chemr::mass("P"),

@@ -80,7 +80,7 @@ pb_sol_jurgens <- function(
     components = list(
       "Pb" = 1e-3 * Pb / chemr::mass("Pb"),
       "pH" = ph,
-      "C(4)" = dic / chemr::mass("C"),
+      "C(4)" = if(is.numeric(dic)) dic / chemr::mass("C") else dic,
       "P" = phosphate / chemr::mass("P"),
       "pe" = 4,
       "temp" = 25,
