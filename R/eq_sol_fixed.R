@@ -11,6 +11,7 @@
 #' @param phase Equilibrium phase.
 #' @param element An element to return the equilibrium concentration of.
 #' @param phase_quantity Moles of equilibrium phase initially present.
+#' @param pe Set the pe of the solution.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
 #' @param surface_components Components of a surface assemblage, passed to
@@ -45,6 +46,7 @@ eq_sol_fixed <- function(
   phase,
   element,
   phase_quantity = 1,
+  pe = 4,
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
@@ -81,7 +83,7 @@ eq_sol_fixed <- function(
       "pH" = ph,
       "C(4)" = if(is.numeric(dic)) dic / chemr::mass("C") else dic,
       "P" = phosphate / chemr::mass("P"),
-      "pe" = 4,
+      "pe" = pe,
       "temp" = 25,
       "redox" = "pe",
       "units" = "mmol/kgw",
@@ -107,7 +109,7 @@ eq_sol_fixed <- function(
     components = list(
       "phase" = c(0, phase_quantity),
       "Fix_pH" = c(-ph, buffer, 1e6),
-      "Fix_pe" = c(-4, "O2", 1e6)
+      "Fix_pe" = c(-pe, "O2", 1e6)
     ) %>%
       rlang::set_names(c(phase, "Fix_pH", "Fix_pe")) %>%
       c(eq_phase_components)
