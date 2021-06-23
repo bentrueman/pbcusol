@@ -15,6 +15,7 @@ eq_sol_wham(
   element,
   mu_is = 0.003,
   phase_quantity = 1,
+  pe = 4,
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
@@ -49,6 +50,8 @@ cu_sol_wham(element = "Cu", ...)
 area of the humic acid molecules.}
 
 \item{phase_quantity}{Moles of equilibrium phase initially present.}
+
+\item{pe}{Set the pe of the solution.}
 
 \item{eq_phase_components}{Additional equilibrium phase components, passed to
 \code{tidyphreeqc::phr_input_section} as a list.}

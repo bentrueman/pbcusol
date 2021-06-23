@@ -12,6 +12,8 @@
 #' @param db The database to use for equilibrium solubility computations. The default is `pbcusol:::pbcu2sol`
 #' @param empirical Logical. Predict equilibrium copper solubility using the empirical model due to
 #' Lytle et al. \url{https://doi.org/10.1002/awwa.1109}?
+#' @param  print Choose whether to print the input file ("input"), the full output ("output"), or the selected output.
+#' Default is the latter.
 #' @param ... Arguments passed on to `phr_solution_list()`
 #'
 #' @return A tibble with the input grid of pH and DIC values and the solubilty predictions.
@@ -36,6 +38,7 @@ eq_sol <- function(
   element,
   db = pbcu2sol,
   empirical = FALSE,
+  print = NULL,
   ...
 ) {
 
@@ -51,7 +54,7 @@ eq_sol <- function(
 
   tidyphreeqc::phr_use_db(db)
 
-  tidyphreeqc::phr_run(
+  run <- tidyphreeqc::phr_input(
     do.call(tidyphreeqc::phr_solution_list, rlang::list2(
       pH = ph,
       !!element := c("1", phase, "0") %>% paste(collapse = " "),
@@ -63,14 +66,24 @@ eq_sol <- function(
       ...
     )),
     tidyphreeqc::phr_selected_output(pH = TRUE, totals = c("C", "P", element))
-  ) %>%
-    tibble::as_tibble() %>%
-    dplyr::transmute(
-      .data$pH,
-      dic_ppm = 1e3 * chemr::mass("C") * .data$`C(mol/kgw)`,
-      p_ppm = 1e3 * chemr::mass("P") * .data$`P(mol/kgw)`,
-      !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element),
-    )
+  )
+
+  if(is.null(print)) {
+    tidyphreeqc::phr_run(run) %>%
+      tibble::as_tibble() %>%
+      dplyr::transmute(
+        .data$pH,
+        dic_ppm = 1e3 * chemr::mass("C") * .data$`C(mol/kgw)`,
+        p_ppm = 1e3 * chemr::mass("P") * .data$`P(mol/kgw)`,
+        !!paste0(stringr::str_to_lower(element), "_ppb") := 1e6 * .data[[paste0(element, "(mol/kgw)")]] * chemr::mass(element),
+      )
+    } else
+      if(print == "input") run else
+      if(print == "output") {
+        # full output:
+        tidyphreeqc::phr_run(run) %>%
+          tidyphreeqc::phr_print_output()
+      }
   }
 }
 

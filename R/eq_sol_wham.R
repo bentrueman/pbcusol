@@ -17,6 +17,7 @@
 #' @param mu_is An initial guess for the ionic strength, used to estimate the specific surface
 #' area of the humic acid molecules.
 #' @param phase_quantity Moles of equilibrium phase initially present.
+#' @param pe Set the pe of the solution.
 #' @param eq_phase_components Additional equilibrium phase components, passed to
 #' `tidyphreeqc::phr_input_section` as a list.
 #' @param surface_components Additional surface components, passed to
@@ -54,6 +55,7 @@ eq_sol_wham <- function(
   element,
   mu_is = .003,
   phase_quantity = 1,
+  pe = 4,
   eq_phase_components = list(),
   new_phase = list(),
   phase_out = "Fix_pH",
@@ -101,7 +103,7 @@ eq_sol_wham <- function(
       "pH" = ph,
       "C(4)" = if(is.numeric(dic)) dic / chemr::mass("C") else dic,
       "P" = phosphate / chemr::mass("P"),
-      "pe" = 4,
+      "pe" = pe,
       "temp" = 25,
       "redox" = "pe",
       "units" = "mmol/kgw",
@@ -127,7 +129,7 @@ eq_sol_wham <- function(
     components = list(
       "phase" = c(0, phase_quantity),
       "Fix_pH" = c(-ph, buffer, 1e6),
-      "Fix_pe" = c(-4, "O2", 1e6)
+      "Fix_pe" = c(-pe, "O2", 1e6)
     ) %>%
       rlang::set_names(c(phase, "Fix_pH", "Fix_pe")) %>%
       c(eq_phase_components)

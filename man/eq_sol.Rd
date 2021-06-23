@@ -16,6 +16,7 @@ eq_sol(
   element,
   db = pbcu2sol,
   empirical = FALSE,
+  print = NULL,
   ...
 )
 
@@ -42,6 +43,9 @@ cu_sol(..., element = "Cu")
 
 \item{empirical}{Logical. Predict equilibrium copper solubility using the empirical model due to
 Lytle et al. \url{https://doi.org/10.1002/awwa.1109}?}
+
+\item{print}{Choose whether to print the input file ("input"), the full output ("output"), or the selected output.
+Default is the latter.}
 
 \item{...}{Arguments passed on to \code{phr_solution_list()}}
 }
