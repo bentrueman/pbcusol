@@ -5,6 +5,9 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/bentrueman/pbcusol/workflows/R-CMD-check/badge.svg)](https://github.com/bentrueman/pbcusol/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/bentrueman/pbcusol/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/pbcusol?branch=main)
 <!-- badges: end -->
 
 `pbcusol` predicts equilibrium lead and copper solubility using the US
@@ -38,7 +41,7 @@ library("viridis")
 Use `eq_sol()` to calculate the equlibrium solubility of multiple copper
 phases that occur in drinking water systems, over a wide range of pH
 values and dissolved inorganic carbon concentrations. (N.B., evaluate on
-a smaller grid to speed this up\!)
+a smaller grid to speed this up!)
 
 ``` r
 dic_increment_cu <- 1.5
@@ -147,7 +150,7 @@ eq_sol_wham(
     solution_pb = pb_ppb, 
     total_pb = mol_Cerussite * 1e6 * 207.21
   )
-#> # A tibble: 1 x 5
+#> # A tibble: 1 × 5
 #>   phase        pH dic_ppm solution_pb total_pb
 #>   <chr>     <dbl>   <dbl>       <dbl>    <dbl>
 #> 1 Cerussite   7.5    50.1        217.    1162.
@@ -187,7 +190,7 @@ eq_sol_fixed(
     solution_pb = pb_ppb, 
     total_pb = mol_Hxypyromorphite * 1e6 * 207.21 * 5
   )
-#> # A tibble: 1 x 6
+#> # A tibble: 1 × 6
 #>   phase              pH dic_ppm p_ppm solution_pb total_pb
 #>   <chr>           <dbl>   <dbl> <dbl>       <dbl>    <dbl>
 #> 1 Hxypyromorphite   7.5    5.00 0.303        19.7     38.0
