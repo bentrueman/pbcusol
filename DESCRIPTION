@@ -28,4 +28,7 @@ Depends:
 Suggests: 
     covr,
     testthat (>= 3.0.0)
+Remotes: 
+    paleolimbot/chemr
+    paleolimbot/tidyphreeqc
 Config/testthat/edition: 3
