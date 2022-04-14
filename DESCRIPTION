@@ -29,6 +29,5 @@ Suggests:
     covr,
     testthat (>= 3.0.0)
 Remotes: 
-    github::paleolimbot/chemr
-    github::paleolimbot/tidyphreeqc
+    paleolimbot/chemr, paleolimbot/tidyphreeqc
 Config/testthat/edition: 3
