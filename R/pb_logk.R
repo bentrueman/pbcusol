@@ -74,7 +74,8 @@ pb_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
       # remove all but phase names from name column
       name = dplyr::if_else(stringr::str_detect(name, "ite"), name, ""),
       log_k = stringr::str_remove(.data$log_k, "log_k") %>%
-        as.numeric()
+        as.numeric(),
+      eqn = stringr::str_trim(.data$eqn, side = "both")
     ) %>%
     dplyr::arrange(name, stringr::str_remove_all(.data$eqn, "[0-9]"))
 

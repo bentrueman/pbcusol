@@ -69,6 +69,7 @@ cu_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
       name = dplyr::if_else(stringr::str_detect(name, "="), "", name),
       log_k = stringr::str_remove_all(.data$log_k, "log_k") %>%
         as.numeric(),
+      eqn = stringr::str_trim(.data$eqn, side = "both")
     ) %>%
     dplyr::arrange(name, stringr::str_remove_all(.data$eqn, "[0-9]"))
 
