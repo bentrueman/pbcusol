@@ -57,6 +57,8 @@ pb_sol_jurgens <- function(
   ...
 ) {
 
+  pH <- pe <- mu <- `C(mol/kgw)` <- `P(mol/kgw)` <- `Ca(mol/kgw)` <- NULL
+
   if(!is.null(print)) if(!print %in% c("input", "output"))
     stop("Valid entries for print are NULL, 'input', or 'output'")
 
@@ -176,10 +178,10 @@ pb_sol_jurgens <- function(
       tibble::as_tibble() %>%
       dplyr::filter(.data$state == "react") %>%
       dplyr::select(
-        .data$pH, .data$pe, .data$mu,
+        pH, pe, mu,
         paste0("s_", phases[c(2, 3, 5, 7, 8, 10)]), paste0("d_", phases[-1]),
-        .data$`C(mol/kgw)`, .data$`P(mol/kgw)`, .data$`Ca(mol/kgw)`,
-        .data[[paste0(element, "(mol/kgw)")]]
+        `C(mol/kgw)`, `P(mol/kgw)`, `Ca(mol/kgw)`,
+        tidyselect::all_of(paste0(element, "(mol/kgw)"))
       ) %>%
       dplyr::mutate(
         dic_ppm = 1e3 * .data$`C(mol/kgw)` * chemr::mass("C"),

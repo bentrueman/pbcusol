@@ -14,6 +14,8 @@
 #' pb_logk()
 pb_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
 
+  name <- type <- data <- NULL
+
   database <- db %>%
     tibble::enframe(name = NULL) %>%
     tibble::rowid_to_column()
@@ -53,28 +55,28 @@ pb_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
         .data$rowid >= phases & .data$type == "phase" ~ .data$value
       )
     ) %>%
-    tidyr::fill(.data$name) %>%
+    tidyr::fill(name) %>%
     dplyr::filter(.data$type != "phase") %>% # remove b/c phase transferred to name column
-    dplyr::group_by(.data$name, .data$type) %>%
+    dplyr::group_by(name, .data$type) %>%
     # collapses duplicate name and type combinations to same row
     dplyr::summarize(data = paste(.data$value, collapse = ", ")) %>%
-    dplyr::select(.data$name, .data$type, .data$data) %>%
+    dplyr::select(name, type, data) %>%
     tidyr::spread(key = .data$type, value = .data$data)
 
   table <- database_wide %>%
     dplyr::filter(
       !stringr::str_detect(.data$eqn, remove_these),
-      stringr::str_detect(.data$name, keep_these)
+      stringr::str_detect(name, keep_these)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       dplyr::across(tidyselect::everything(), \(x) stringr::str_remove_all(x, "\t")),
       # remove all but phase names from name column
-      name = dplyr::if_else(stringr::str_detect(.data$name, "ite"), .data$name, ""),
+      name = dplyr::if_else(stringr::str_detect(name, "ite"), name, ""),
       log_k = stringr::str_remove(.data$log_k, "log_k") %>%
         as.numeric()
     ) %>%
-    dplyr::arrange(.data$name, stringr::str_remove_all(.data$eqn, "[0-9]"))
+    dplyr::arrange(name, stringr::str_remove_all(.data$eqn, "[0-9]"))
 
   if(kable_format) {
     table %>%
@@ -86,9 +88,9 @@ pb_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
           stringr::str_replace_all("(\\))(\\d)", "\\1~\\2~") %>% # subscripts in formulas
           stringr::str_replace_all("(\\w)(\\d)", "\\1~\\2~"), # subscripts in formulas
         name = dplyr::case_when(
-          .data$name == "Hxypyromorphite" ~ "Hydroxylpyromorphite",
-          .data$name == "Hydcerussite" ~ "Hydrocerussite",
-          TRUE ~ .data$name
+          name == "Hxypyromorphite" ~ "Hydroxylpyromorphite",
+          name == "Hydcerussite" ~ "Hydrocerussite",
+          TRUE ~ name
         )
     )
   } else table

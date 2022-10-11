@@ -14,6 +14,8 @@
 #' cu_logk()
 cu_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
 
+  name <- type <- data <- NULL
+
   database <- db %>%
     tibble::enframe(name = NULL) %>%
     tibble::rowid_to_column()
@@ -51,12 +53,12 @@ cu_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
         .data$rowid >= phases & .data$type == "phase" ~ .data$value
       )
     ) %>%
-    tidyr::fill(.data$name) %>%
+    tidyr::fill(name) %>%
     dplyr::filter(.data$type != "phase") %>% # remove b/c phase transferred to name column
-    dplyr::group_by(.data$name, .data$type) %>%
+    dplyr::group_by(name, .data$type) %>%
     # collapses duplicate name and type combinations to same row
     dplyr::summarize(data = paste(.data$value, collapse = ", ")) %>%
-    dplyr::select(.data$name, .data$type, .data$data) %>%
+    dplyr::select(name, type, data) %>%
     tidyr::spread(key = .data$type, value = .data$data)
 
   table <- database_wide %>%
@@ -64,11 +66,11 @@ cu_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
     dplyr::ungroup() %>%
     dplyr::mutate(
       dplyr::across(tidyselect::everything(), \(x) stringr::str_remove_all(x, "\t")),
-      name = dplyr::if_else(stringr::str_detect(.data$name, "="), "", .data$name),
+      name = dplyr::if_else(stringr::str_detect(name, "="), "", name),
       log_k = stringr::str_remove_all(.data$log_k, "log_k") %>%
         as.numeric(),
     ) %>%
-    dplyr::arrange(.data$name, stringr::str_remove_all(.data$eqn, "[0-9]"))
+    dplyr::arrange(name, stringr::str_remove_all(.data$eqn, "[0-9]"))
 
   if(kable_format) {
     table %>%
@@ -79,7 +81,7 @@ cu_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
           stringr::str_replace_all("(\\w)(\\-)", "\\1^\\2^") %>% # superscript charges
           stringr::str_replace_all("(\\))(\\d)", "\\1~\\2~") %>% # subscripts in formulas
           stringr::str_replace_all("(\\w)(\\d)", "\\1~\\2~"), # subscripts in formulas
-        name = stringr::str_replace_all(.data$name, "(\\))(\\d)", "\\1~\\2~") %>%
+        name = stringr::str_replace_all(name, "(\\))(\\d)", "\\1~\\2~") %>%
           stringr::str_replace_all("([:alpha:])(\\d)", "\\1~\\2~") %>%
           stringr::str_replace("CuMetal", "Cu metal")
       )
