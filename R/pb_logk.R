@@ -1,7 +1,9 @@
 
-#' Return LEADSOL phases, reactions, and log K values
+#' Return  a basic set of phases, reactions, and log K values involving Pb from a database
 #'
 #' @param kable_format Logical. Format the table for `knitr::kable`?
+#' @param db The database from which to extract phases, reactions, and log K values. The default is the curated dataset
+#' included in the package, but the function is also designed to work for phreeqc::minteq.dat and phreeqc::minteq.v4.dat.
 #'
 #' @return A tibble with phase names, reactions, and log K values.
 #' @importFrom dplyr %>%
@@ -10,26 +12,35 @@
 #'
 #' @examples
 #' pb_logk()
-pb_logk <- function(kable_format = FALSE) {
+pb_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
 
-  database <- pbcu2sol %>%
+  database <- db %>%
     tibble::enframe(name = NULL) %>%
     tibble::rowid_to_column()
 
-  phases <- database %>%  # phases start on line 3401, solution species are before
-    dplyr::filter(stringr::str_detect(.data$value, "PHASE")) %>%
-    dplyr::pull(.data$rowid)
+  phases <- database %>%  # in LEADSOL, phases start on line 3401, solution species are before
+    dplyr::filter(stringr::str_detect(.data$value, "PHASES")) %>%
+    dplyr::pull(.data$rowid) %>%
+    min()
 
-  filter_these <- c("ine", "ate", "ide", "ta", "Al", "Se", "U", "As", "B",
+  solution_species <- database %>%
+    dplyr::filter(stringr::str_detect(.data$value, "SOLUTION_SPECIES")) %>%
+    dplyr::pull(.data$rowid) %>%
+    min()
+
+  remove_these <- c("ine", "ate", "ide", "ta", "Al", "Se", "U", "As", "B",
     "Br", "F", "I", "V", "HS", "N", "Cr", "Cu", "Metal") %>%  # these will be filtered out
     paste(collapse = "|")
 
-  table <- database %>%
+  keep_these <- paste(c("[cC]erussite", "pyromorphite", "="), collapse = "|")
+
+  database_wide <- database %>%
     dplyr::filter(
-      .data$rowid > 148, # solution reactions start on line 149, lines 1 - 148 are essential definitions
+      .data$rowid > solution_species,# exclude solution master species
       stringr::str_detect(.data$value, "Pb") | # retain equations with Pb
-        (.data$rowid > phases & dplyr::lead(.data$value, 1) %>% stringr::str_detect("Pb")) | # and phase names (above equations)
-        dplyr::lag(.data$value, 1) %>% stringr::str_detect("Pb")  # and log K values (below equations)
+        # and phase names (above equations):
+        (.data$rowid > phases & stringr::str_detect(dplyr::lead(.data$value, 1), "Pb")) |
+        stringr::str_detect(dplyr::lag(.data$value, 1), "Pb")
     ) %>%
     dplyr::mutate(
       type = dplyr::case_when( # indicates type of data in value column
@@ -48,15 +59,20 @@ pb_logk <- function(kable_format = FALSE) {
     # collapses duplicate name and type combinations to same row
     dplyr::summarize(data = paste(.data$value, collapse = ", ")) %>%
     dplyr::select(.data$name, .data$type, .data$data) %>%
-    tidyr::spread(key = .data$type, value = .data$data) %>%
+    tidyr::spread(key = .data$type, value = .data$data)
+
+  table <- database_wide %>%
     dplyr::filter(
-      !stringr::str_detect(.data$eqn, filter_these),
-      stringr::str_detect(.data$name, c("Cerussite", "Hydcerussite", "Hxypyromorphite", "=") %>% paste(collapse = "|"))
+      !stringr::str_detect(.data$eqn, remove_these),
+      stringr::str_detect(.data$name, keep_these)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      name = dplyr::if_else(stringr::str_detect(.data$name, "ite"), .data$name, ""), # remove all but phase names from name column
-      log_k = stringr::str_remove(.data$log_k, "log_k ") %>% as.numeric()
+      dplyr::across(tidyselect::everything(), \(x) stringr::str_remove_all(x, "\t")),
+      # remove all but phase names from name column
+      name = dplyr::if_else(stringr::str_detect(.data$name, "ite"), .data$name, ""),
+      log_k = stringr::str_remove(.data$log_k, "log_k") %>%
+        as.numeric()
     ) %>%
     dplyr::arrange(.data$name, stringr::str_remove_all(.data$eqn, "[0-9]"))
 

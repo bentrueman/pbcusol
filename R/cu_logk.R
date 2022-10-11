@@ -1,7 +1,9 @@
 
-#' Return CU2SOL phases, reactions, and log K values
+#' Return a basic set of phases, reactions, and log K values involving Cu from a database.
 #'
 #' @param kable_format Logical. Format the table for `knitr::kable`?
+#' @param db The database from which to extract phases, reactions, and log K values. The default is the curated dataset
+#' included in the package, but the function is also designed to work for phreeqc::minteq.dat and phreeqc::minteq.v4.dat.
 #'
 #' @return A tibble with phase names, reactions, and log K values.
 #' @importFrom dplyr %>%
@@ -10,27 +12,33 @@
 #'
 #' @examples
 #' cu_logk()
-cu_logk <- function(kable_format = FALSE) {
+cu_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
 
-  database <- pbcu2sol %>%
+  database <- db %>%
     tibble::enframe(name = NULL) %>%
     tibble::rowid_to_column()
 
   phases <- database %>%  # phases start on line 3437, solution species are before
-    dplyr::filter(stringr::str_detect(.data$value, "PHASE")) %>%
-    dplyr::pull(.data$rowid)
+    dplyr::filter(stringr::str_detect(.data$value, "PHASES")) %>%
+    dplyr::pull(.data$rowid) %>%
+    min()
 
+  solution_species <- database %>%
+    dplyr::filter(stringr::str_detect(.data$value, "SOLUTION_SPECIES")) %>%
+    dplyr::pull(.data$rowid) %>%
+    min()
 
-  filter_these <- c("ine", "ate", "ide", "ta", "Al", "Se", "U", "As", "B", "Br",
+  filter_these <- c("Hfo", "ine", "ate", "ide", "ta", "Al", "Se", "U", "As", "B", "Br",
     "F", "I", "V", "HS", "Cr", "Sb", "Pb", "Si") %>%
     paste(collapse = "|")
 
-  table <- database %>%
+  database_wide <- database %>%
     dplyr::filter(
-      .data$rowid > 152, # solution reactions start on line 152, lines 1 - 151are essential definitions
+      .data$rowid > solution_species,
       stringr::str_detect(.data$value, "Cu") | # retain equations with Cu
-        (.data$rowid > phases & dplyr::lead(.data$value, 1) %>% stringr::str_detect("Cu")) | # and phase names (above equations)
-        dplyr::lag(.data$value, 1) %>% stringr::str_detect("Cu")  # and log K values (below equations)
+        # and phase names (above equations):
+        (.data$rowid > phases & stringr::str_detect(dplyr::lead(.data$value, 1), "Cu")) |
+        stringr::str_detect(dplyr::lag(.data$value, 1), "Cu")  # and log K values (below equations)
     ) %>%
     dplyr::mutate(
       type = dplyr::case_when( # indicates type of data in value column
@@ -49,12 +57,16 @@ cu_logk <- function(kable_format = FALSE) {
     # collapses duplicate name and type combinations to same row
     dplyr::summarize(data = paste(.data$value, collapse = ", ")) %>%
     dplyr::select(.data$name, .data$type, .data$data) %>%
-    tidyr::spread(key = .data$type, value = .data$data) %>%
+    tidyr::spread(key = .data$type, value = .data$data)
+
+  table <- database_wide %>%
     dplyr::filter(!stringr::str_detect(.data$eqn, filter_these)) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      log_k = stringr::str_remove_all(.data$log_k, "\t|log_k") %>% stringr::str_trim(side = "both"),
-      name = ifelse(stringr::str_detect(.data$name, "="), "", .data$name)
+      dplyr::across(tidyselect::everything(), \(x) stringr::str_remove_all(x, "\t")),
+      name = dplyr::if_else(stringr::str_detect(.data$name, "="), "", .data$name),
+      log_k = stringr::str_remove_all(.data$log_k, "log_k") %>%
+        as.numeric(),
     ) %>%
     dplyr::arrange(.data$name, stringr::str_remove_all(.data$eqn, "[0-9]"))
 

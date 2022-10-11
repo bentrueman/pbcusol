@@ -2,18 +2,21 @@
 % Please edit documentation in R/cu_logk.R
 \name{cu_logk}
 \alias{cu_logk}
-\title{Return CU2SOL phases, reactions, and log K values}
+\title{Return a basic set of phases, reactions, and log K values involving Cu from a database.}
 \usage{
-cu_logk(kable_format = FALSE)
+cu_logk(kable_format = FALSE, db = pbcusol:::pbcu2sol)
 }
 \arguments{
 \item{kable_format}{Logical. Format the table for \code{knitr::kable}?}
+
+\item{db}{The database from which to extract phases, reactions, and log K values. The default is the curated dataset
+included in the package, but the function is also designed to work for phreeqc::minteq.dat and phreeqc::minteq.v4.dat.}
 }
 \value{
 A tibble with phase names, reactions, and log K values.
 }
 \description{
-Return CU2SOL phases, reactions, and log K values
+Return a basic set of phases, reactions, and log K values involving Cu from a database.
 }
 \examples{
 cu_logk()

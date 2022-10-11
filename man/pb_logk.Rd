@@ -2,18 +2,21 @@
 % Please edit documentation in R/pb_logk.R
 \name{pb_logk}
 \alias{pb_logk}
-\title{Return LEADSOL phases, reactions, and log K values}
+\title{Return  a basic set of phases, reactions, and log K values involving Pb from a database}
 \usage{
-pb_logk(kable_format = FALSE)
+pb_logk(kable_format = FALSE, db = pbcusol:::pbcu2sol)
 }
 \arguments{
 \item{kable_format}{Logical. Format the table for \code{knitr::kable}?}
+
+\item{db}{The database from which to extract phases, reactions, and log K values. The default is the curated dataset
+included in the package, but the function is also designed to work for phreeqc::minteq.dat and phreeqc::minteq.v4.dat.}
 }
 \value{
 A tibble with phase names, reactions, and log K values.
 }
 \description{
-Return LEADSOL phases, reactions, and log K values
+Return  a basic set of phases, reactions, and log K values involving Pb from a database
 }
 \examples{
 pb_logk()
