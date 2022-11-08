@@ -83,11 +83,11 @@ accomplished here using \code{tidyphreeqc::phr_pH_fix_definition()}, with help f
 }
 \section{Functions}{
 \itemize{
-\item \code{pb_sol_fixed}: Shorthand for \code{eq_sol_fixed()} with \code{element = "Pb"}. For backwards compatibility.
+\item \code{pb_sol_fixed()}: Shorthand for \code{eq_sol_fixed()} with \code{element = "Pb"}. For backwards compatibility.
 
-\item \code{cu_sol_fixed}: Shorthand for \code{eq_sol_fixed()} with \code{element = "Cu"}. For backwards compatibility.
+\item \code{cu_sol_fixed()}: Shorthand for \code{eq_sol_fixed()} with \code{element = "Cu"}. For backwards compatibility.
+
 }}
-
 \examples{
 eq_sol_fixed(element = "Pb", ph = 6, dic = 5, phase = "Cerussite", buffer = "HCl")
 }

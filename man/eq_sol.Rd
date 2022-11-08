@@ -57,11 +57,11 @@ Calculate equilibrium solubility on a grid of input values
 }
 \section{Functions}{
 \itemize{
-\item \code{pb_sol}: Shorthand for \code{eq_sol()} with \code{element = "Pb"}. For backwards compatibility.
+\item \code{pb_sol()}: Shorthand for \code{eq_sol()} with \code{element = "Pb"}. For backwards compatibility.
 
-\item \code{cu_sol}: Shorthand for \code{eq_sol()} with \code{element = "Cu"}. For backwards compatibility.
+\item \code{cu_sol()}: Shorthand for \code{eq_sol()} with \code{element = "Cu"}. For backwards compatibility.
+
 }}
-
 \examples{
 eq_sol(element = "Pb", ph = 7.5, dic = 5, phase = "Cerussite")
 eq_sol(element = "Pb", ph = 7.5, dic = 5, db = phreeqc::minteq.v4.dat, phase = "Cerussite")

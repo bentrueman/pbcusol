@@ -95,11 +95,11 @@ This function works like \code{eq_sol_fixed()}.
 }
 \section{Functions}{
 \itemize{
-\item \code{pb_sol_wham}: Shorthand for \code{eq_sol_wham()} with \code{element = "Pb"}. For backwards compatibility.
+\item \code{pb_sol_wham()}: Shorthand for \code{eq_sol_wham()} with \code{element = "Pb"}. For backwards compatibility.
 
-\item \code{cu_sol_wham}: Shorthand for \code{eq_sol_wham()} with \code{element = "Cu"}. For backwards compatibility.
+\item \code{cu_sol_wham()}: Shorthand for \code{eq_sol_wham()} with \code{element = "Cu"}. For backwards compatibility.
+
 }}
-
 \examples{
 eq_sol_wham(element = "Pb", ph = 7.5, dic = 50, phase = "Cerussite", Na = 10, mass_ha = 3.5e-3)
 }
