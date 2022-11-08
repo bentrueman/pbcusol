@@ -28,3 +28,10 @@ test_that("change_logk() replaces log Ks in default database with those in phree
   modified <- modified[!modified$eqn %in% remove_these, ]
   expect_equal(target[order(target$log_k), -1], modified[order(modified$log_k), -1])
 })
+
+test_that("change_logk() informs when equation not found in database", {
+  expect_error(
+    change_logk(eqn = c("not an equation", "also not an equation"), logk = 1:2),
+    regexp = "not found in database"
+  )
+})
