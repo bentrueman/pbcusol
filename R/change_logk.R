@@ -53,5 +53,5 @@ validate_db <- function(db) {
   # extract lines after equations:
   after_eqn <- db[eqn_index + 1]
   logk_after_eqn <- str_detect(after_eqn, "log_k") | str_detect(after_eqn, "^#")
-  stopifnot("Each log K must appear on the line following the equation at applies to." = mean(logk_after_eqn) == 1)
+  stopifnot("Each log K must appear on the line following the equation to which it applies." = mean(logk_after_eqn) == 1)
 }
