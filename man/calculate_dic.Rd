@@ -4,12 +4,14 @@
 \alias{calculate_dic}
 \title{Calculate dissolved inorganic carbon}
 \usage{
-calculate_dic(ph, alkalinity)
+calculate_dic(ph, alkalinity, temperature = 25)
 }
 \arguments{
 \item{ph}{A vector of pH values.}
 
 \item{alkalinity}{A vector of alkalinities, in mg CaCO3/L}
+
+\item{temperature}{Water tempterature in degress C}
 }
 \value{
 A numeric vector of dissolved inorganic carbon concentrations, in mg C/L.
