@@ -5,9 +5,9 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/bentrueman/pbcusol/workflows/R-CMD-check/badge.svg)](https://github.com/bentrueman/pbcusol/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/bentrueman/pbcusol/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/pbcusol?branch=main)
+[![R-CMD-check](https://github.com/bentrueman/pbcusol/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bentrueman/pbcusol/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `pbcusol` predicts equilibrium lead and copper solubility using the US
@@ -30,12 +30,11 @@ remotes::install_github("bentrueman/pbcusol")
 ## Example
 
 For this example, you will need the `tidyverse` family of packages,
-along with `plyr::round_any()`, and `viridis::scale_fill_viridis()`.
+along with `plyr::round_any()`.
 
 ``` r
 library("pbcusol")
 library("tidyverse")
-library("viridis")
 ```
 
 Use `eq_sol()` to calculate the equlibrium solubility of multiple copper
@@ -74,8 +73,11 @@ solutions_cu %>%
   facet_wrap(vars(phase)) + 
   geom_raster(aes(fill = log10_cu_ppb)) +
   geom_contour(aes(z = log10_cu_ppb), col = "white") +
-  viridis::scale_fill_viridis(option = "magma")
+  scale_fill_viridis_c(option = "magma")
 ```
+
+    #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    #> ℹ Please use `linewidth` instead.
 
 <img src="man/figures/README-cu-plot-1.png" width="100%" /> Use
 `eq_sol()` to make the same predictions for lead. The helper function
@@ -110,7 +112,7 @@ solutions_pb %>%
   facet_wrap(vars(phase)) + 
   geom_raster(aes(fill = log10_pb_ppb)) +
   geom_contour(aes(z = log10_pb_ppb), col = "white") +
-  viridis::scale_fill_viridis(option = "magma")
+  scale_fill_viridis_c(option = "magma")
 ```
 
 <img src="man/figures/README-pb-plot-1.png" width="100%" />

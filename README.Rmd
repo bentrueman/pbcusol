@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 # pbcusol
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/bentrueman/pbcusol/workflows/R-CMD-check/badge.svg)](https://github.com/bentrueman/pbcusol/actions)
 [![Codecov test coverage](https://codecov.io/gh/bentrueman/pbcusol/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/pbcusol?branch=main)
+[![R-CMD-check](https://github.com/bentrueman/pbcusol/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bentrueman/pbcusol/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `pbcusol` predicts equilibrium lead and copper solubility using the US EPA databases LEADSOL (Schock et al. 1996) and CU2SOL (Schock et al., 1995), along with those available as a part of PHREEQC (Charlton and Parkhurst, 2011; Parkhurst and Appelo, 2013). `pbcusol` uses `tidyphreeqc` (Dunnington, 2019)---a convenient interface for PHREEQC in R---for most solubility computations.
@@ -34,12 +34,11 @@ remotes::install_github("bentrueman/pbcusol")
 ```
 ## Example
 
-For this example, you will need the `tidyverse` family of packages, along with `plyr::round_any()`, and `viridis::scale_fill_viridis()`.
+For this example, you will need the `tidyverse` family of packages, along with `plyr::round_any()`.
 
 ```{r load, message=FALSE}
 library("pbcusol")
 library("tidyverse")
-library("viridis")
 ```
 
 ```{r theme, echo=FALSE}
@@ -75,7 +74,7 @@ solutions_cu %>%
   facet_wrap(vars(phase)) + 
   geom_raster(aes(fill = log10_cu_ppb)) +
   geom_contour(aes(z = log10_cu_ppb), col = "white") +
-  viridis::scale_fill_viridis(option = "magma")
+  scale_fill_viridis_c(option = "magma")
 ```
 
 ```{r cu-plot, fig.height=3, echo=FALSE}
@@ -90,7 +89,7 @@ solutions_cu %>%
   geom_raster(aes(fill = cu_ppb)) +
   geom_contour(aes(z = cu_ppb), col = "white", linetype = 2, size = .2, breaks = seq(-4, 5, by = .1)) + 
   geom_contour(aes(z = cu_ppb), col = "white", breaks = -3:5) + 
-  viridis::scale_fill_viridis(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
+  scale_fill_viridis_c(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
   labs(
     x = expression("[C]"[inorganic]~"(mg L"^"-1"*")"),
     y = "pH",
@@ -127,7 +126,7 @@ solutions_pb %>%
   facet_wrap(vars(phase)) + 
   geom_raster(aes(fill = log10_pb_ppb)) +
   geom_contour(aes(z = log10_pb_ppb), col = "white") +
-  viridis::scale_fill_viridis(option = "magma")
+  scale_fill_viridis_c(option = "magma")
 ```
 
 ```{r pb-plot, fig.height=3, echo=FALSE}
@@ -142,7 +141,7 @@ solutions_pb %>%
   geom_raster(aes(fill = pb_ppb)) +
   geom_contour(aes(z = pb_ppb), col = "white", linetype = 2, size = .2, breaks = seq(-4, 5, by = .1)) + 
   geom_contour(aes(z = pb_ppb), col = "white", breaks = -3:5) + 
-  viridis::scale_fill_viridis(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
+  scale_fill_viridis_c(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
   labs(
     x = expression("[C]"[inorganic]~"(mg L"^"-1"*")"),
     y = "pH",
@@ -210,7 +209,7 @@ list(
     aes(x = dic_ppm, y = max),
     linetype = 2, size = 1, col = "white", se = FALSE, span = .4
   ) +
-  viridis::scale_color_viridis(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
+  scale_color_viridis_c(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
   labs(
     x = expression("[C]"[inorganic]~"(mg L"^"-1"*")"),
     y = "pH",
