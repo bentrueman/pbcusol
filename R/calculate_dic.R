@@ -4,23 +4,35 @@
 #' @param ph A vector of pH values.
 #' @param alkalinity A vector of alkalinities, in mg CaCO3/L
 #' @param temperature Water tempterature in degress C
+#' @param method Either "a" or "b". Method "a", the default, is described in https://doi.org/10.1002/j.1551-8833.1980.tb04616.x, and it
+#' applies at 25 degrees C only. Method "b" uses PHREEQC and incorporates temperature as a variable, but it may not converge.
 #'
 #' @return A numeric vector of dissolved inorganic carbon concentrations, in mg C/L.
 #' @export
 #'
 #' @examples
 #' calculate_dic(7.5, 20)
-calculate_dic <- function(ph, alkalinity, temperature = 25) {
+calculate_dic <- function(ph, alkalinity, temperature = 25, method = "a") {
 
-  # old formula:
-  # alk <- alkalinity / 50044.5 # convert mg CaCO3 / L to eq / L
-  # h <- 10 ^ (-ph)
-  # poh <- 14 - ph
-  # oh <- 10 ^ (-poh)
-  # k1 <- 10 ^ -6.35
-  # k2 <- 10 ^ -10.33
-  # 12011 * (alk + h - oh) * (h ^ 2 + k1 * h + k1 * k2) / (k1 * h + 2 * k1 * k2) # dic in mg/L
-  # # formula source is https://doi.org/10.1002/j.1551-8833.1980.tb04616.x
+  if (method %in% c("a", "b")) {
+    if (method == "a") dic <- use_method_a(ph, alkalinity)
+    if (method == "b") dic <- use_method_b(ph, alkalinity, temperature)
+  } else
+    stop("method must be either 'a' or 'b'")
+  dic
+}
+
+use_method_a <- function(ph, alkalinity) {
+  alk <- alkalinity / 50044.5 # convert mg CaCO3 / L to eq / L
+  h <- 10 ^ (-ph)
+  poh <- 14 - ph
+  oh <- 10 ^ (-poh)
+  k1 <- 10 ^ -6.35
+  k2 <- 10 ^ -10.33
+  12011 * (alk + h - oh) * (h ^ 2 + k1 * h + k1 * k2) / (k1 * h + 2 * k1 * k2) # dic in mg/L
+}
+
+use_method_b <- function(ph, alkalinity, temperature) {
 
   wq <- data.frame(
     ph,

@@ -4,7 +4,7 @@
 \alias{calculate_dic}
 \title{Calculate dissolved inorganic carbon}
 \usage{
-calculate_dic(ph, alkalinity, temperature = 25)
+calculate_dic(ph, alkalinity, temperature = 25, method = "a")
 }
 \arguments{
 \item{ph}{A vector of pH values.}
@@ -12,6 +12,9 @@ calculate_dic(ph, alkalinity, temperature = 25)
 \item{alkalinity}{A vector of alkalinities, in mg CaCO3/L}
 
 \item{temperature}{Water tempterature in degress C}
+
+\item{method}{Either "a" or "b". Method "a", the default, is described in https://doi.org/10.1002/j.1551-8833.1980.tb04616.x, and it
+applies at 25 degrees C only. Method "b" uses PHREEQC and incorporates temperature as a variable, but it may not converge.}
 }
 \value{
 A numeric vector of dissolved inorganic carbon concentrations, in mg C/L.
