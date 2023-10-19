@@ -35,6 +35,7 @@ along with `plyr::round_any()`.
 ``` r
 library("pbcusol")
 library("tidyverse")
+library("plyr", include.only = "round_any")
 ```
 
 Use `eq_sol()` to calculate the equlibrium solubility of multiple copper
@@ -76,13 +77,11 @@ solutions_cu %>%
   scale_fill_viridis_c(option = "magma")
 ```
 
-    #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    #> ℹ Please use `linewidth` instead.
+<img src="man/figures/README-cu-plot-1.png" width="100%" />
 
-<img src="man/figures/README-cu-plot-1.png" width="100%" /> Use
-`eq_sol()` to make the same predictions for lead. The helper function
-`calculate_dic()` may be useful for converting alkalinity to dissolved
-inorganic carbon.
+Use `eq_sol()` to make the same predictions for lead. The helper
+function `calculate_dic()` may be useful for converting alkalinity to
+dissolved inorganic carbon.
 
 ``` r
 dic_increment_pb <- .8
@@ -114,6 +113,12 @@ solutions_pb %>%
   geom_contour(aes(z = log10_pb_ppb), col = "white") +
   scale_fill_viridis_c(option = "magma")
 ```
+
+    #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    #> ℹ Please use `linewidth` instead.
+    #> This warning is displayed once every 8 hours.
+    #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    #> generated.
 
 <img src="man/figures/README-pb-plot-1.png" width="100%" />
 

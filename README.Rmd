@@ -39,6 +39,7 @@ For this example, you will need the `tidyverse` family of packages, along with `
 ```{r load, message=FALSE}
 library("pbcusol")
 library("tidyverse")
+library("plyr", include.only = "round_any")
 ```
 
 ```{r theme, echo=FALSE}
@@ -87,7 +88,7 @@ solutions_cu %>%
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase), labeller = label_parsed) + 
   geom_raster(aes(fill = cu_ppb)) +
-  geom_contour(aes(z = cu_ppb), col = "white", linetype = 2, size = .2, breaks = seq(-4, 5, by = .1)) + 
+  geom_contour(aes(z = cu_ppb), col = "white", linetype = 2, linewidth = .2, breaks = seq(-4, 5, by = .1)) + 
   geom_contour(aes(z = cu_ppb), col = "white", breaks = -3:5) + 
   scale_fill_viridis_c(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
   labs(
@@ -96,6 +97,7 @@ solutions_cu %>%
     fill = expression("[Cu] (mg L"^"-1"*")")
   )
 ```
+
 Use `eq_sol()` to make the same predictions for lead. The helper function `calculate_dic()` may be useful for converting alkalinity to dissolved inorganic carbon. 
 
 ```{r pb-sol}

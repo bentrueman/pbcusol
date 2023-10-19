@@ -16,7 +16,7 @@
        8 ""    Cu+2 + Cl- = CuCl+                         0.4 
        9 ""    2Cu+ + 4Cl- = Cu2Cl4-2                    10.3 
       10 ""    Cu+ + 2Cl- = CuCl2-                        5.48
-      # ... with 43 more rows
+      # i 43 more rows
 
 ---
 
@@ -36,5 +36,5 @@
        8 ""    Cu^+2^ + Cl^-^ = CuCl^+^                                   0.4 
        9 ""    2Cu^+^ + 4Cl^-^ = Cu~2~Cl~4~^-2^                          10.3 
       10 ""    Cu^+^ + 2Cl^-^ = CuCl~2~^-^                                5.48
-      # ... with 43 more rows
+      # i 43 more rows
 
