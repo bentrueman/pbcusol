@@ -141,7 +141,7 @@ solutions_pb %>%
   ggplot(aes(x = dic_ppm, y = pH)) + 
   facet_wrap(vars(phase)) + 
   geom_raster(aes(fill = pb_ppb)) +
-  geom_contour(aes(z = pb_ppb), col = "white", linetype = 2, size = .2, breaks = seq(-4, 5, by = .1)) + 
+  geom_contour(aes(z = pb_ppb), col = "white", linetype = 2, linewidth = .2, breaks = seq(-4, 5, by = .1)) + 
   geom_contour(aes(z = pb_ppb), col = "white", breaks = -3:5) + 
   scale_fill_viridis_c(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
   labs(
@@ -176,10 +176,8 @@ list(
   facet_wrap(vars(element), scales = "free_x") + 
   geom_point(aes(col = conc_ppb), shape = 15, size = 1) +
   geom_contour(
-    # data = function(x) x %>% 
-    #   filter(element == "[Cu]"),
     aes(z = conc_ppb), col = "white", linetype = 2, 
-    size = .2, breaks = seq(-4, 3, by = .1)
+    linewidth = .2, breaks = seq(-4, 3, by = .1)
   ) + 
   geom_contour(
     data = function(x) x %>% 
@@ -192,7 +190,7 @@ list(
       group_by(element, dic_ppm) %>% 
       summarize(min = min(pH)),
     aes(x = dic_ppm, y = min),
-    linetype = 2, size = 1, col = "white", se = FALSE, span = .4
+    linetype = 2, linewidth = 1, col = "white", se = FALSE, span = .4
   ) + 
   geom_smooth(
     data = function(x) x %>% 
@@ -200,7 +198,7 @@ list(
       group_by(element, dic_ppm) %>% 
       summarize(min = min(pH)),
     aes(x = dic_ppm, y = min),
-    linetype = 2, size = 1, col = "white", se = FALSE, span = .4
+    linetype = 2, linewidth = 1, col = "white", se = FALSE, span = .4
   ) +
   geom_smooth(
     data = function(x) x %>% 
@@ -209,7 +207,7 @@ list(
       summarize(max = max(pH)) %>% 
       filter(dic_ppm > 35),
     aes(x = dic_ppm, y = max),
-    linetype = 2, size = 1, col = "white", se = FALSE, span = .4
+    linetype = 2, linewidth = 1, col = "white", se = FALSE, span = .4
   ) +
   scale_color_viridis_c(option = "magma", labels = function(breaks) 1e-3 * (10 ^ breaks)) +
   labs(

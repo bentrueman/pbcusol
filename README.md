@@ -114,12 +114,6 @@ solutions_pb %>%
   scale_fill_viridis_c(option = "magma")
 ```
 
-    #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    #> ℹ Please use `linewidth` instead.
-    #> This warning is displayed once every 8 hours.
-    #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    #> generated.
-
 <img src="man/figures/README-pb-plot-1.png" width="100%" />
 
 Combining the information in the previous two plots, we can generate
