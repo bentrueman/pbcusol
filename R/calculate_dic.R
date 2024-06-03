@@ -50,6 +50,6 @@ use_method_b <- function(ph, alkalinity, temperature) {
     dic[i] <- tibble::as_tibble(out)$`C(mol/kgw)` * chemr::mass("C") * 1e3
   }
 
-  if (is.na(alkalinity)) NA_real_ else dic
+  ifelse(is.na(alkalinity), NA, dic)
 
 }
