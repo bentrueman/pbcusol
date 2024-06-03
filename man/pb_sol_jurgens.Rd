@@ -54,7 +54,7 @@ pb_sol_jurgens(
 \item{buffer}{Substance added or subtracted from the solution to yield the desired pH.}
 
 \item{db}{The database to use for equilibrium solubility computations. The default is
-\code{pbcusol:::leadsol}}
+\code{leadsol}}
 
 \item{print}{Choose whether to print the input file ("input"), the full output ("output"), or the selected output.
 Default is the latter.}

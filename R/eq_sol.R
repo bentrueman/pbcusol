@@ -9,7 +9,7 @@
 #' @param sulfate A vector of sulfate concentrations, in mg SO4/L.
 #' @param phosphate A vector of orthophosphate concentrations, in mg P/L.
 #' @param phase Equilibrium phase.
-#' @param db The database to use for equilibrium solubility computations. The default is `pbcusol:::pbcu2sol`
+#' @param db The database to use for equilibrium solubility computations. The default is `pbcu2sol`
 #' @param empirical Logical. Predict equilibrium copper solubility using the empirical model due to
 #' Lytle et al. \url{https://doi.org/10.1002/awwa.1109}?
 #' @param  print Choose whether to print the input file ("input"), the full output ("output"), or the selected output.

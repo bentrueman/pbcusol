@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' pb_logk()
-pb_logk <- function(kable_format = FALSE, db = pbcusol:::pbcu2sol) {
+pb_logk <- function(kable_format = FALSE, db = pbcu2sol) {
 
   name <- type <- data <- NULL
 

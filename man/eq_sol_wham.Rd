@@ -71,7 +71,7 @@ area of the humic acid molecules.}
 \item{buffer}{Substance added or subtracted from the solution to yield the desired pH.}
 
 \item{db}{The database to use for equilibrium solubility computations. The default is
-\code{pbcusol:::leadsol}}
+\code{leadsol}}
 
 \item{max_iter}{Maximum iterations allowed for convergence of ionic strength.}
 

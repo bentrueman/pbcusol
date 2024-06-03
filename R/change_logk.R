@@ -13,7 +13,7 @@
 #' @examples
 #' phreeqc::minteq.v4.dat[1820:1821]
 #' change_logk(db = phreeqc::minteq.v4.dat, eqn = "Pb+2 + Cl- = PbCl+", logk = 1.59)[1820:1821]
-change_logk <- function(db = pbcusol:::pbcu2sol, eqn, logk) {
+change_logk <- function(db = pbcu2sol, eqn, logk) {
   validate_db(db)
   stopifnot("arguments 'eqn' and 'logk' must be equal in length" = length(eqn) == length(logk))
   eqn_rx <- modify_eqn(eqn)

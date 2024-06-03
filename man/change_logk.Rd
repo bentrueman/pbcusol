@@ -4,7 +4,7 @@
 \alias{change_logk}
 \title{Change log K values in a database}
 \usage{
-change_logk(db = pbcusol:::pbcu2sol, eqn, logk)
+change_logk(db = pbcu2sol, eqn, logk)
 }
 \arguments{
 \item{db}{The PHREEQC database to modify.}

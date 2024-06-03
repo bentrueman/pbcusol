@@ -39,7 +39,7 @@ cu_sol(..., element = "Cu")
 
 \item{element}{An element to return the equilibrium concentration of.}
 
-\item{db}{The database to use for equilibrium solubility computations. The default is \code{pbcusol:::pbcu2sol}}
+\item{db}{The database to use for equilibrium solubility computations. The default is \code{pbcu2sol}}
 
 \item{empirical}{Logical. Predict equilibrium copper solubility using the empirical model due to
 Lytle et al. \url{https://doi.org/10.1002/awwa.1109}?}

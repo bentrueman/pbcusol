@@ -4,7 +4,7 @@
 \alias{cu_logk}
 \title{Return a basic set of phases, reactions, and log K values involving Cu from a database.}
 \usage{
-cu_logk(kable_format = FALSE, db = pbcusol:::pbcu2sol)
+cu_logk(kable_format = FALSE, db = pbcu2sol)
 }
 \arguments{
 \item{kable_format}{Logical. Format the table for \code{knitr::kable}?}
