@@ -9,7 +9,7 @@ test_that("calculate_dic() returns an error if method is not a or b", {
 
 test_that("calculate_dic() returns NA when alkalinity is NA", {
   expect_equal(
-    calculate_dic(c(9, 10), c(NA, 19), c(10, 20), method = "b"), c(NA, 2.84669), tolerance = 1e-5
+    calculate_dic(c(9, 8), c(NA, 19), c(10, 20), method = "b"), c(NA, 4.63918), tolerance = 1e-5
   )
   expect_equal(
     calculate_dic(c(9, 10), c(NA, 19), c(10, 20), method = "a"), c(NA, 2.54765), tolerance = 1e-5
