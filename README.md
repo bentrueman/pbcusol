@@ -15,7 +15,8 @@ EPA databases LEADSOL (Schock et al. 1996) and CU2SOL (Schock et al.,
 1995), along with those available as a part of PHREEQC (Charlton and
 Parkhurst, 2011; Parkhurst and Appelo, 2013). `pbcusol` uses
 `tidyphreeqc` (Dunnington, 2019)—a convenient interface for PHREEQC in
-R—for most solubility computations.
+R—for most solubility computations. It’s also available as a [Shiny
+app](https://bentrueman.shinyapps.io/shinypbcusol/).
 
 ## Installation
 
