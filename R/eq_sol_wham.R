@@ -77,8 +77,8 @@ eq_sol_wham <- function(
   } else output_components
 
   # data from WHAM:
-  surface_master_species <- phreeqc::Tipping_Hurley.dat[3169:3176]
-  surface_species <- phreeqc::Tipping_Hurley.dat[3177:3355]
+  surface_master_species <- phreeqc::Tipping_Hurley.dat[3168:3175]
+  surface_species <- phreeqc::Tipping_Hurley.dat[3176:3351]
 
   # charge on 4 nHA sites:
   nHA_4 <- 2.84 / 4 * mass_ha / 1e3 # (eq)
