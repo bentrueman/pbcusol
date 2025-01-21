@@ -77,8 +77,11 @@ eq_sol_wham <- function(
   } else output_components
 
   # data from WHAM:
-  surface_master_species <- phreeqc::Tipping_Hurley.dat[3168:3175]
-  surface_species <- phreeqc::Tipping_Hurley.dat[3176:3351]
+  surface_master_species_start <- max(which(grepl("SURFACE_MASTER_SPECIES", phreeqc::Tipping_Hurley.dat)))
+  surface_species_start <- max(which(grepl("SURFACE_SPECIES", phreeqc::Tipping_Hurley.dat)))
+  surface_species_end <- max(which(grepl("END", phreeqc::Tipping_Hurley.dat)))
+  surface_master_species <- phreeqc::Tipping_Hurley.dat[surface_master_species_start:(surface_species_start - 1)]
+  surface_species <- phreeqc::Tipping_Hurley.dat[surface_species_start:surface_species_end]
 
   # charge on 4 nHA sites:
   nHA_4 <- 2.84 / 4 * mass_ha / 1e3 # (eq)
