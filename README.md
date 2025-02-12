@@ -8,6 +8,8 @@
 [![Codecov test
 coverage](https://codecov.io/gh/bentrueman/pbcusol/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/pbcusol?branch=main)
 [![R-CMD-check](https://github.com/bentrueman/pbcusol/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bentrueman/pbcusol/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/bentrueman/pbcusol/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/pbcusol)
 <!-- badges: end -->
 
 `pbcusol` predicts equilibrium lead and copper solubility using the US
